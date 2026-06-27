@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+.DS_Store
+.claude/
+# internal handoff notes (Ghost page IDs / publishing workflow) — not for the public repo
+HANDOFF.md
+# superseded first-pass widget
+breed_group_widget.html
