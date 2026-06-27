@@ -7,6 +7,16 @@ with top-level tabs by sport: **Breed/Group · Obedience · Agility · Rally**.
 
 Source reports: https://englishspringerspaniels.org/faq-items/quarterly-rankings/
 
+## Screenshots
+
+| Breed/Group rankings | Per-sport title/class explainer + data-coverage |
+|---|---|
+| ![Overview](screenshots/01-overview-breed-group.png) | ![Explainer](screenshots/03-explainer-and-coverage.png) |
+
+| Obedience (sport-specific columns) | One-click PDF export of the current view |
+|---|---|
+| ![Obedience](screenshots/02-obedience.png) | ![PDF export](screenshots/04-pdf-export.png) |
+
 ## What's here
 
 | File | Purpose |
