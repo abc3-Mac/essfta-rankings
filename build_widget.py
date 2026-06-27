@@ -73,8 +73,11 @@ def norm_category(sport, c):
         c = re.sub(r"\s*\(Highest Average Score\)\s*", "", c)
         c = re.sub(r"\s+Agility\b", "", c).strip()
     elif sport == "Rally":
+        c = re.sub(r"\s*[–-]\s*Final Top 10.*$", "", c, flags=re.I).strip()
         if c.startswith("High Combined"):
             c = "High Combined"
+        if c.startswith("High Triple"):
+            c = "High Triple"
         if c == "Masters":
             c = "Master"
     return c or "Overall"

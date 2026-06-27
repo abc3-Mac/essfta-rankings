@@ -1,0 +1,107 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0;}
+  :root{--maroon:#6B2327;--maroon2:#8A2D33;--cream:#F4EEE2;--paper:#FBF5E9;--gold:#C8A24A;
+    --green:#4A7043;--teal:#2F6B73;--brown:#2D2218;--ink:#2A2320;--muted:#8A7F73;--line:#E2D8C2;
+    --serif:'Fraunces',Georgia,serif;--sans:'Inter',-apple-system,Arial,sans-serif;}
+  body{width:1080px;font-family:var(--sans);color:var(--ink);background:#EDE5D4;}
+  .frame{background:var(--cream);border:3px solid var(--gold);margin:22px;border-radius:6px;overflow:hidden;}
+  .head{background:linear-gradient(165deg,#7A2A2F,#531B1F);color:var(--cream);padding:40px 50px 34px;text-align:center;position:relative;}
+  .head .paw{font-size:30px;color:var(--gold);margin-bottom:6px;}
+  .head .logo{height:78px;background:var(--cream);padding:8px 14px;border-radius:10px;margin-bottom:16px;}
+  .head h1{font-family:var(--serif);font-weight:700;font-size:50px;line-height:1.02;letter-spacing:.5px;}
+  .head .kicker{color:#E7D6A8;font-size:15.5px;letter-spacing:3px;text-transform:uppercase;font-weight:600;margin-top:12px;}
+  .body{padding:34px 50px 14px;}
+  .stats{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:34px;}
+  .stat{background:#fff;border:1px solid var(--line);border-radius:12px;padding:20px 10px 16px;text-align:center;box-shadow:0 3px 10px rgba(42,35,32,.06);}
+  .stat.inv{background:var(--maroon);border-color:var(--maroon);}
+  .stat .n{font-family:var(--serif);font-weight:700;font-size:38px;line-height:1;}
+  .stat.c1 .n{color:var(--maroon);}.stat.c2 .n{color:var(--green);}.stat.c3 .n{color:var(--gold);}.stat.c4 .n{color:var(--teal);}.stat.inv .n{color:#fff;}
+  .stat .l{font-size:13px;font-weight:600;color:var(--muted);margin-top:8px;}
+  .stat.inv .l{color:#E7D6A8;}
+  .stat .u{width:34px;height:3px;background:var(--gold);border-radius:2px;margin:9px auto 0;}
+  h2{font-family:var(--serif);color:var(--maroon);font-size:27px;font-weight:600;margin:0 0 16px;padding-bottom:9px;border-bottom:2px solid var(--line);}
+  .bars{margin-bottom:34px;}
+  .bar{display:grid;grid-template-columns:200px 1fr;align-items:center;gap:16px;margin-bottom:13px;}
+  .bar .lab{font-size:16px;font-weight:700;}
+  .bar .lab small{display:block;color:var(--muted);font-weight:500;font-size:12.5px;margin-top:1px;}
+  .bar .track{background:#EAE0CC;border-radius:7px;height:38px;position:relative;}
+  .bar .fill{height:100%;border-radius:7px;display:flex;align-items:center;justify-content:flex-end;padding-right:13px;color:#fff;font-weight:800;font-size:17px;min-width:54px;}
+  .b-rally{background:var(--maroon2);}.b-obed{background:var(--gold);}.b-conf{background:var(--green);}.b-agi{background:var(--teal);}
+  .tl{margin-bottom:32px;}
+  .tlrow{display:grid;grid-template-columns:140px 1fr;align-items:center;gap:14px;margin-bottom:11px;}
+  .tlrow .lab{font-size:14.5px;font-weight:700;}
+  .tltrack{position:relative;height:22px;background:#EAE0CC;border-radius:11px;}
+  .seg{position:absolute;top:0;height:22px;border-radius:11px;}
+  .axis{display:grid;grid-template-columns:140px 1fr;gap:14px;margin-top:4px;}
+  .axis .ticks{display:flex;justify-content:space-between;color:var(--muted);font-size:12px;font-weight:600;}
+  .gap-note{margin-top:9px;font-size:13px;color:#9a6a1a;}
+  .built{background:var(--brown);color:#F0E8DC;border-radius:14px;padding:26px 30px;margin-bottom:26px;}
+  .built h3{font-family:var(--serif);color:#fff;font-size:23px;margin-bottom:18px;}
+  .built .cols{display:grid;grid-template-columns:1fr 1fr auto;gap:24px;align-items:center;}
+  .built .k{font-size:13px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;}
+  .built .c-a .k{color:var(--gold);}.built .c-b .k{color:#D98A8A;}
+  .built .v{font-family:var(--serif);font-weight:700;font-size:34px;color:#fff;line-height:1.05;margin-top:4px;}
+  .built .s{font-size:13px;color:#b8ada0;margin-top:3px;}
+  .built .fast{font-family:var(--serif);font-weight:700;font-size:46px;color:var(--gold);text-align:center;border-left:1px solid #4a3d30;padding-left:24px;}
+  .built .fast small{display:block;font-family:var(--sans);font-size:14px;color:#F0E8DC;font-weight:600;}
+  .own{border:1.5px solid #E8D6A8;background:linear-gradient(135deg,#FBF1E0,#F6E9CF);border-radius:14px;padding:26px 30px;text-align:center;}
+  .own h3{font-family:var(--serif);color:var(--maroon);font-size:25px;margin-bottom:10px;}
+  .own h3 + .ul{width:60px;height:3px;background:var(--gold);margin:0 auto 14px;border-radius:2px;}
+  .own p{font-size:16.5px;color:#5a4f44;line-height:1.55;}
+  .own p b{color:var(--maroon2);}
+  .own .small{font-size:13.5px;color:var(--muted);margin-top:10px;}
+  .foot{text-align:center;color:var(--muted);font-size:13px;padding:22px 50px 26px;line-height:1.6;}
+</style></head>
+<body><div class="frame">
+  <div class="head">
+    <img class="logo" src="data:image/png;base64,__LOGO__" alt="ESSFTA">
+    <h1>Quarterly Rankings, Digitized</h1>
+    <div class="kicker">English Springer Spaniel Field Trial Association · Parent Club · 2013–2026</div>
+  </div>
+  <div class="body">
+    <div class="stats">
+      <div class="stat c1"><div class="n">2,794</div><div class="u"></div><div class="l">rankings digitized</div></div>
+      <div class="stat c2"><div class="n">~1,743</div><div class="u"></div><div class="l">unique dogs</div></div>
+      <div class="stat c3"><div class="n">4</div><div class="u"></div><div class="l">sports covered</div></div>
+      <div class="stat c4"><div class="n">54</div><div class="u"></div><div class="l">source reports</div></div>
+      <div class="stat inv"><div class="n">14</div><div class="u"></div><div class="l">years preserved</div></div>
+    </div>
+
+    <div class="bars">
+      <h2>Rankings by sport</h2>
+      <div class="bar"><div class="lab">Rally<small>2013–2026 · 12 classes</small></div><div class="track"><div class="fill b-rally" style="width:100%">962</div></div></div>
+      <div class="bar"><div class="lab">Obedience<small>2013–2026 · 21 classes</small></div><div class="track"><div class="fill b-obed" style="width:86.5%">832</div></div></div>
+      <div class="bar"><div class="lab">Breed / Group<small>2013–2026 · 4 sections</small></div><div class="track"><div class="fill b-conf" style="width:80%">770</div></div></div>
+      <div class="bar"><div class="lab">Agility<small>2013–2019, 2023–2026</small></div><div class="track"><div class="fill b-agi" style="width:23.9%">230</div></div></div>
+    </div>
+
+    <div class="tl">
+      <h2>Year coverage</h2>
+      <div class="tlrow"><div class="lab">Breed / Group</div><div class="tltrack"><div class="seg b-conf" style="left:0;right:0"></div></div></div>
+      <div class="tlrow"><div class="lab">Obedience</div><div class="tltrack"><div class="seg b-obed" style="left:0;right:0"></div></div></div>
+      <div class="tlrow"><div class="lab">Rally</div><div class="tltrack"><div class="seg b-rally" style="left:0;right:0"></div></div></div>
+      <div class="tlrow"><div class="lab">Agility</div><div class="tltrack"><div class="seg b-agi" style="left:0%;width:46.2%"></div><div class="seg b-agi" style="left:76.9%;right:0"></div></div></div>
+      <div class="axis"><div></div><div class="ticks"><span>2013</span><span>2016</span><span>2019</span><span>2022</span><span>2026</span></div></div>
+      <div class="gap-note">⚑ Agility 2020–2022: no ranking report was ever published — the page flags these gaps honestly.</div>
+    </div>
+
+    <div class="built">
+      <h3>How it was built</h3>
+      <div class="cols">
+        <div class="c-a"><div class="k">Automated pipeline</div><div class="v">minutes</div><div class="s">re-runs in seconds when a new report is added</div></div>
+        <div class="c-b"><div class="k">Manual transcription</div><div class="v">60–120 hrs</div><div class="s">typing 2,794 rows from messy PDFs · higher error rate</div></div>
+        <div class="fast">~40×<small>faster</small></div>
+      </div>
+    </div>
+
+    <div class="own">
+      <h3>ESSFTA’s own record</h3><div class="ul"></div>
+      <p>Built from the club’s <b>publicly published AKC ranking reports</b> — read straight from the source PDFs,
+      <b>not scraped from any website</b>. Names are cleaned and standardized, ties preserved, and every figure traces back to an official report.</p>
+      <p class="small">Ready for the club to maintain — adding each new quarter takes minutes.</p>
+    </div>
+  </div>
+  <div class="foot">Source: ESSFTA quarterly ranking reports (AKC electronic records) · 54 PDFs preserved · master database <code>essfta_rankings.db</code> · prepared June 2026</div>
+</div></body></html>

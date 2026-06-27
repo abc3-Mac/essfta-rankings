@@ -169,7 +169,8 @@ def looks_like_header(sport, stripped):
     # must contain a class keyword to avoid catching stray text
     return bool(re.search(r"Novice|Open|Utility|Excellent|Master|Advanced|Beginner|"
                           r"Graduate|Versatility|Preferred|Combined|Optional|Wild Card|"
-                          r"Regular|Veteran|Brace|Team|Champion|Intermediate", stripped, re.I))
+                          r"Regular|Veteran|Brace|Team|Champion|Intermediate|"
+                          r"High Triple|Triple|High Combined|Choice", stripped, re.I))
 
 
 def parse_year_from_text(lines):
@@ -202,8 +203,30 @@ def _fix_glyphs(s):
     return re.sub(r"\(cid:\d+\)", "", s)
 
 
+_GLUE = re.compile(r"^(.+?)(\d+\.\d+)$")          # "Souza*98.67" → "Souza*" + "98.67"
+
+
+def _split_glued(words):
+    """When an owner runs flush into its score (no gap), pdfplumber yields one
+    token like 'Souza*98.67'. Split off a trailing decimal score into its own
+    word with an estimated x so the row is detected as scored, not merged."""
+    out = []
+    for w in words:
+        m = _GLUE.match(w["text"])
+        if m and re.search(r"[A-Za-z*)]", m.group(1)):
+            pre, num = m.group(1), m.group(2)
+            x0, x1, n = w["x0"], w["x1"], len(w["text"])
+            cut = x0 + (x1 - x0) * len(pre) / n
+            out.append({**w, "text": pre, "x1": cut})
+            out.append({**w, "text": num, "x0": cut})
+        else:
+            out.append(w)
+    return out
+
+
 def group_lines(words, ytol=3.0):
     """Group words into visual lines by top coordinate, each sorted left→right."""
+    words = _split_glued(words)
     ws = sorted(words, key=lambda w: (round(w["top"], 1), w["x0"]))
     lines = []
     for w in ws:
@@ -347,11 +370,20 @@ def parse_positions(path, year, sport, quarter, score_cols=1):
             if not owner_x:
                 continue
             anchors, orphans = [], []          # current category block (per page)
+            notes_mode = False                 # a "NOTES:" block = end-of-report footnotes
             for ln in lines:
                 ws = ln["words"]
                 text = " ".join(w["text"] for w in ws).strip()
                 if not text or NOISE.search(text):
                     continue
+                if re.match(r"^\s*NOTES\b", text, re.I):
+                    flush(anchors, orphans); anchors, orphans = [], []
+                    notes_mode = True; continue
+                if notes_mode:                 # skip footnotes until a real header resumes
+                    if looks_like_header(sport, text):
+                        notes_mode = False
+                    else:
+                        continue
                 score_words = [w for w in ws
                                if NUMERIC_FULL.match(w["text"]) and w["x0"] >= score_x - 40]
                 if score_words and len(ws) >= 2:
