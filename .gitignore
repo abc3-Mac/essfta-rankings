@@ -15,3 +15,5 @@ blog_post_final.html
 raw_akc/
 # the BUILT calculator embeds the 702-member directory inline → private only
 rankings_calculator.html
+# personal backup tooling (points at the private repo) — backed up to private, not public
+backup_to_private.sh
