@@ -15,6 +15,10 @@ PDFS = os.path.join(HERE, "pdfs")
 NUMERIC = re.compile(r"^\d+(?:\.\d+)?$")
 RANK_LEAD = re.compile(r"^(\d+)\.?\s+(.*)$")     # "1 Dog…" or "1. Dog…"
 
+# Agility years whose owner column can't be recovered cleanly — shipped with
+# dog/rank/score only, owners left blank (see HANDOFF.md).
+OWNERLESS_AGILITY = {"2013", "2015", "2019"}
+
 # lines that are never data and never a category header
 NOISE = re.compile(r"SCORECARD|Trials |Results taken|Average of|January|"
                    r"No Dogs Eligible|^Page|^\d+\s*$|rankings based|based on the|"
@@ -626,6 +630,18 @@ def parse_sport_pdf(path, year, sport, quarter):
     # MORE valid rows for this PDF — recovers the dropped years without ever
     # regressing the good ones.
     if sport == "Agility":
+        # 2013/2015/2019 reports have a misaligned/wrapped owner column that no
+        # parser recovers cleanly; the geometry parser still nails dog/rank/score,
+        # so ship those with owners intentionally BLANK (honest, not wrong).
+        if true_year in OWNERLESS_AGILITY:
+            from parse_agility_geom import parse_agility_geom
+            rows = parse_agility_geom(path, true_year, quarter)
+            for r in rows:
+                r["owner"] = ""
+                # a stray owner initial sometimes bleeds onto the name tail; with
+                # owners blanked, drop trailing lone-capital tokens ("… AXJ T")
+                r["dog"] = re.sub(r"(?:\s+[A-Z]\b)+$", "", r["dog"]).strip()
+            return rows, true_year
         if any("of the Year" in ln for ln in lines[:4]):
             old = _parse_pdftotext(lines, sport, true_year, quarter)
         else:
@@ -682,10 +698,13 @@ def main():
                 return False
             if re.match(r"^0\d", str(r["score"])):          # "076" = mis-parse
                 return False
-            if not r["owner"].strip() or r["owner"][0].islower():  # truncated owner
-                return False
-            if not re.search(r"[a-z]", r["owner"]):         # AKC-title string, not an owner
-                return False
+            # 2013/2015/2019 ship with owners deliberately blank — exempt them
+            # from the owner sanity checks (but still validate name/score).
+            if r["year"] not in OWNERLESS_AGILITY:
+                if not r["owner"].strip() or r["owner"][0].islower():  # truncated owner
+                    return False
+                if not re.search(r"[a-z]", r["owner"]):     # AKC-title string, not an owner
+                    return False
             if re.match(r"^[\d.]", r["dog"]):               # YPS leaked into name
                 return False
             if r["score2"] and float(r["score2"]) > 12:     # YPS out of range

@@ -885,12 +885,14 @@ Obedience,2020,Q4,Optional: Beginner Novice B,3,,GCH CH Kehre’s Mirror Mirror 
 Obedience,2020,Q4,Optional: Beginner Novice B,4,,CH Braveheart N Vasdon Total Eclipse BN RA CGC,A Leonetti*/M Leonetti*/A Vasquez*/R J Vasquez*,189.33,
 Obedience,2020,Q4,Optional: Beginner Novice B,5,,CH Studio N Kytra’s Pure Kashmere BN RN SWE SEM SHDN CGCA CGCU TKA,J Prala*/G Prala*/D Lodge*,186.17,
 Obedience,2020,Q4,Optional: Versatility,1,,MACH2 Bryden Dream Best Kept Secret UD BN GN VER RE MXS MJG GCG ATT,S Kucaba*/D B Swartwood*/T Kucaba*,194.33,
-Agility,2019,Q4,Open,1,,Pride 'N Joy's Hitting For The Cycle CD OA OAJ CGC TKN Topguns Can't Take My Eyes Off You RN NA OAJ OF DN CGC TKI,Janet Kolakoski/Don na Thompson* Margaret Bielecky/T homas Bielecky,95.83,3.7
-Agility,2019,Q4,Open,2,,Matilda Mae (Tilly) OA OAJ Bud's None The Weiser OA OAJ,Sarah Waldhauser* Robert LaBelle*/Mo rgan LaBelle*,94.17,4.64
-Agility,2019,Q4,Open,3,,Wedgwood N Tri-Ste's Spot On BN RA OA OAJ NF CA DCAT THD RATCH CZ8B CGCA CGCU TKE,Susan Smith/Tyler Smith,91.33,2.79
-Agility,2019,Q4,Preferred Open,1,,Pawmarc's He's In The Dryver's Seat BN RN OAP OJP NFP,Mrs. Elizabeth Koers en*,97.17,3.28
-Agility,2019,Q4,Preferred Open,2,,Clodagh OAP OJP NFP CGC,Paul Sullivan*/Tami Sullivan*,95.83,2.99
-Agility,2019,Q4,Preferred Excellent,1,,Cannon's Chase Is On The Case RA AXP AJP NFP SWN CGC TKI,Sarah Cannon*,100,3.43
+Agility,2019,Q4,Novice,1,,Lighthouse I'm Your Huckleberry NA NAJ CGC,,100,
+Agility,2019,Q4,Open,1,,Pride 'N Joy's Hitting For The Cycle CD OA OAJ CGC TKN,,96,
+Agility,2019,Q4,Open,2,,Matilda Mae (Tilly) OA OAJ,,95.5,
+Agility,2019,Q4,Open,3,,Bud's None The Weiser OA OAJ,,95,
+Agility,2019,Q4,Excellent,1,,Prairierose's Rainy Day In June AX AXJ NF,,100,
+Agility,2019,Q4,Excellent,2,,Merfey's Meadow Of Ferns CD RA AX AXJ NF RATO CGC,,100,
+Agility,2019,Q4,Excellent,3,,Grimms Hellfire Hexenbiest BN RA TD AX AXJ NF CAA BCAT,,100,
+Agility,2019,Q4,Excellent,1,,Cannon's Chase Is On The Case RA AXP AJP NFP SWN CGC TKI,,100,3.43129
 Rally,2020,Q4,Novice A,1,,CH Northgate’s Tag You’re It RN DN CGC TKI,S.Schneider* & J.E.Schneider *,95.00,
 Rally,2020,Q4,Novice B,1,,Topguns Legends Of The Fall RN TD,T. L. Desnica,99.67,
 Rally,2020,Q4,Novice B,2,,Aubrey’s Close Up RN DJ DN TKN,C. Brooks*,98.67,
@@ -1616,32 +1618,32 @@ Obedience,2015,Q4,Optional: Pre-Novice,3,,CH Aspatuck’s Too Makes Four CD BN R
 Obedience,2015,Q4,Optional: Pre-Open,1,,Serenade’s Secret Formula CDX PCDX,L Peters*/A Hutchinson*,194.0,
 Obedience,2015,Q4,Optional: Versatility,1,,Polesitter’s Walk This Way UD BN VER RE AX AXJ,E Falterman*/M Bockhorn*,197.17,
 Obedience,2015,Q4,Optional: Versatility,2,,Hellfire’s Coldplay UD VER RAE SH,A Monaghan*,192.17,
-Agility,2015,Q4,Novice,1,,Keswicke Quick Study CD BN RA JH NA NAJ OAP NJP NF OFP CAA DJA,"Burke*, L Howard*",100,3.49
-Agility,2015,Q4,Novice,2,,CH Hillcrest Just Zo BN RN NA NAJ,Vanco,99.17,4.01
-Agility,2015,Q4,Novice,3,,NAFC AFC Ferndelle's Flying Cloud Of Hcr MH AX AXJ AXP AJP,Fern Oliver*,99.17,3.36
-Agility,2015,Q4,Novice,4,,Polesitter's Walk This Way UD BN VER RE AX AXJ,"Falterman*, Bockhorn*",97.5,4.05
-Agility,2015,Q4,Novice,5,,CH Ocoee And Heartland's On Her Way NA NAJ,"Amante*, J Amante, Johnson",97.5,3.45
-Agility,2015,Q4,Novice,6,,Dawn's Sir Murray Of Wheating NA NAJ,M Linski,97.5,3.38
-Agility,2015,Q4,Novice,7,,Cedarwood's All Ginned Up OA NAJ,"Baker*, J Alschuler*, Welch*",97.17,3.01
-Agility,2015,Q4,Novice,8,,CH Hillcrest Aldendale Spee D Rocn Wheels NA NAJ,"A Shea, J Shea, Johnston*, H Schmidt*",96.67,3.65
-Agility,2015,Q4,Novice,9,,Boeset's Jake NA NAJ,Boeset,96.67,3.31
-Agility,2015,Q4,Novice,10,,Pride'N Joy's Spiders From Mars RE AX AXJ,Sparks*,96.67,3.25
-Agility,2015,Q4,Open,1,,Polesitter's Walk This Way UD BN VER RE AX AXJ,"Falterman*, Bockhorn*",100,4.17
-Agility,2015,Q4,Open,2,,Pride'N Joy's Spiders From Mars RE AX AXJ,Sparks*,99.17,3.82
-Agility,2015,Q4,Open,3,,CH Aubrey's H.K. Pearl AX AXJ,"Summersgill*, Summersgill",99.17,3.66
-Agility,2015,Q4,Open,4,,NAFC AFC Ferndelle's Flying Cloud Of Hcr MH AX AXJ AXP AJP,Fern Oliver*,98.5,3.5
-Agility,2015,Q4,Open,5,,Paylie's Livin The Good Life OA AXJ NF CGC,"Baloh, R Wagner, Wagner, AJ Wagner",98.5,3.27
-Agility,2015,Q4,Open,6,,GCH CH Wil-Orion's CrownRoyal Naug-Tea Or Nice OA OAJ NF,"Osbun*, JL Johnson*, Green*, D Peck",96.17,2.96
-Agility,2015,Q4,Open,7,,Parker Wesley AX OAJ NF,N Smith,95.83,3.64
-Agility,2015,Q4,Open,8,,Paylie's Glory B OA OAJ CGC,Mattes,95.83,3.14
-Agility,2015,Q4,Excellent A,1,,Pride'N Joy's Spiders From Mars RE AX AXJ,Sparks*,100,4.25
-Agility,2015,Q4,Excellent A,2,,Polesitter's Walk This Way UD BN VER RE AX AXJ,"Falterman*, Bockhorn*",100,4.24
-Agility,2015,Q4,Excellent A,3,,Aubrey's Hot Hot Hot MX MXJ OF,"Johnson*, T Johnson*",100,3.88
-Agility,2015,Q4,Excellent A,4,,CH Aubrey's H.K. Pearl AX AXJ,"Summersgill*, Summersgill",100,3.85
-Agility,2015,Q4,Excellent A,5,,GCH CH Fairhaven Wildrose Out Of Grace CD BN RE AX AXJ NAP NJP N F CGCA,"Jansen, KA Priestley, Marley",100,3.68
-Agility,2015,Q4,Excellent A,6,,NAFC AFC Ferndelle's Flying Cloud Of Hcr MH AX AXJ AXP AJP,Fern Oliver*,98,3.53
-Agility,2015,Q4,Excellent A,7,,Stonehenge Curtain Call AX AXJ,"Parszewski*, Dalrymple*",93.5,3.36
-Agility,2015,Q4,Excellent A,8,,FC Sunrise Rock Star MH AX AXJ OF,"Williams*, C Williams*",90.5,3.18
+Agility,2015,Q4,Novice,1,,Keswicke Quick Study CD BN RA JH NA NAJ OAP NJP NF OFP CAA DJA,,100,3.49
+Agility,2015,Q4,Novice,2,,CH Hillcrest Just Zo BN RN NA NAJ,,99.17,4.01
+Agility,2015,Q4,Novice,3,,NAFC AFC Ferndelle's Flying Cloud Of Hcr MH AX AXJ AXP AJP,,99.17,3.36
+Agility,2015,Q4,Novice,4,,Polesitter's Walk This Way UD BN VER RE AX AXJ,,97.5,4.05
+Agility,2015,Q4,Novice,5,,CH Ocoee And Heartland's On Her Way NA NAJ,,97.5,3.45
+Agility,2015,Q4,Novice,6,,Dawn's Sir Murray Of Wheating NA NAJ,,97.5,3.38
+Agility,2015,Q4,Novice,7,,Cedarwood's All Ginned Up OA NAJ,,97.17,3.01
+Agility,2015,Q4,Novice,8,,CH Hillcrest Aldendale Spee D Rocn Wheels NA NAJ,,96.67,3.65
+Agility,2015,Q4,Novice,9,,Boeset's Jake NA NAJ,,96.67,3.31
+Agility,2015,Q4,Novice,10,,Pride'N Joy's Spiders From Mars RE AX AXJ,,96.67,3.25
+Agility,2015,Q4,Open,1,,Polesitter's Walk This Way UD BN VER RE AX AXJ,,100,4.17
+Agility,2015,Q4,Open,2,,Pride'N Joy's Spiders From Mars RE AX AXJ,,99.17,3.82
+Agility,2015,Q4,Open,3,,CH Aubrey's H.K. Pearl AX AXJ,,99.17,3.66
+Agility,2015,Q4,Open,4,,NAFC AFC Ferndelle's Flying Cloud Of Hcr MH AX AXJ AXP AJP,,98.5,3.5
+Agility,2015,Q4,Open,5,,Paylie's Livin The Good Life OA AXJ NF CGC,,98.5,3.27
+Agility,2015,Q4,Open,6,,GCH CH Wil-Orion's CrownRoyal Naug-Tea Or Nice OA OAJ NF,,96.17,2.96
+Agility,2015,Q4,Open,7,,Parker Wesley AX OAJ NF,,95.83,3.64
+Agility,2015,Q4,Open,8,,Paylie's Glory B OA OAJ CGC,,95.83,3.14
+Agility,2015,Q4,Excellent,1,,Pride'N Joy's Spiders From Mars RE AX AXJ,,100,4.25
+Agility,2015,Q4,Excellent,2,,Polesitter's Walk This Way UD BN VER RE AX AXJ,,100,4.24
+Agility,2015,Q4,Excellent,3,,Aubrey's Hot Hot Hot MX MXJ OF,,100,3.88
+Agility,2015,Q4,Excellent,4,,CH Aubrey's H.K. Pearl AX AXJ,,100,3.85
+Agility,2015,Q4,Excellent,5,,CH Fairhaven Wildrose Out Of Grace CD BN RE AX AXJ NAP NJP,,100,3.68
+Agility,2015,Q4,Excellent,6,,NAFC AFC Ferndelle's Flying Cloud Of Hcr MH AX AXJ AXP AJP,,98,3.53
+Agility,2015,Q4,Excellent,7,,Stonehenge Curtain Call AX AXJ,,93.5,3.36
+Agility,2015,Q4,Excellent,8,,FC Sunrise Rock Star MH AX AXJ OF,,90.5,3.18
 Rally,2015,Q4,Novice A,1,,Timberlakes Lil Irish Indiana Jones BN RN CGC,C. & C. Hilbert,95.66,
 Rally,2015,Q4,Novice A,2,,Vistah’s Reveal BN RN,C. Flanders & J. Manley,92.75,
 Rally,2015,Q4,Novice A,3,,Stella Vesperi Lanning Of Lazy L BN RN CGC,E. Lanning,92.00,
@@ -1950,22 +1952,26 @@ Obedience,2013,Q4,Optional: Graduate Novice,1,,Take Your Best Shot CD BN GN OA A
 Obedience,2013,Q4,Optional: Graduate Open,1,,Dsqd Razzle Dazzle CDX BN GO,C Johnson,194.33,
 Obedience,2013,Q4,Optional: Graduate Open,2,,Sidekick’s Gordon’s Second Chance CDX BN GO RE,D Green*/S Green*/C Benedict/B Humphrey,186.17,
 Obedience,2013,Q4,Optional: Pre-Novice,1,,Epic’s Calypso BN PCD RN,S Bertram*,187.5,
-Agility,2013,Q4,Novice,1,,"CH Topguns Free To Be Me JH AX AXJ T Salzwedel,",P Salzwedel,100,4.59
-Agility,2013,Q4,Novice,2,,"Classic Sand‐N‐Seashells Chelsea Beach NA OAJ RE Smedley,",C Heller*,100,4.16
-Agility,2013,Q4,Novice,4,,"Cymbeline’s Into‐Wishing NA NAJ J Winzenburg,","H Dragon, B Ciresi*",100,3.11
-Agility,2013,Q4,Novice,5,,CH Keswicke Navajo Dream Weaver At The Rendezvous VCD1 BN RA TDX OA AXJ NF JG,"Hilbig*, L Howard*",99.17,3.52
-Agility,2013,Q4,Novice,6,,"Trailwind's Right On Target VCD2 BN RN AX AXJ R Capsel*,",CL Clark*,98.33,4.16
-Agility,2013,Q4,Novice,7,,"Muddy Paws Three X The Charisma TD NA NAJ CGC M Mymudes*,","K Heidmann, J Smith",97.5,3.92
-Agility,2013,Q4,Open,1,,Chiridion Driving Ms Macy OA OAJ,"P Jacoby*, M Jacoy",99.17,3.97
-Agility,2013,Q4,Open,2,,CH Spellbound's First Edition CD BN RA AX AXJ,CA Blommer Hansen,99.17,3.42
-Agility,2013,Q4,Open,3,,GCH CH Dartek's Chocolat Bliss RN OA OAJ,"T Viker*, KM Anderson",99.17,3.3
-Agility,2013,Q4,Open,4,,Mia Maria Mygas AX AXJ,K Mygas,99,3.61
-Agility,2013,Q4,Open,5,,Topguns Worth The Wait AX AXJ,J Hass*,98.5,3.8
-Agility,2013,Q4,Open,6,,CH Topguns Free To Be Me JH AX AXJ,"T & P Salzwedel, L Riedel*",98.33,4.83
-Agility,2013,Q4,Open,7,,Wilden Live Out Loud AX AXJ,T Partington*,98.33,3.79
-Agility,2013,Q4,Open,8,,CH Keswicke Navajo Dream Weaver At The Rendezvous VCD1 BN RA TDX OA AXJ NF,"JG Hilbig*, L Howard*",96.83,3.4
-Agility,2013,Q4,Open,9,,Rose Marie Hermonson OA OAJ,"JL Hermonson, EJ Hermonson",96.67,3.97
-Agility,2013,Q4,Open,10,,Vistah's Caru Too Hot To Tango CD RN OA OAJ,"R Burgart*, J Manley*",96.67,3.76
+Agility,2013,Q4,Novice,1,,CH Topguns Free To Be Me JH AX AXJ,,100,4.59
+Agility,2013,Q4,Novice,2,,Classic Sand‐N‐Seashells Chelsea Beach NA OAJ RE,,100,4.16
+Agility,2013,Q4,Novice,3,,Idaho's Lexi Liberty NA NAJ NAP NJP NFP,,100,3.56
+Agility,2013,Q4,Novice,4,,Cymbeline’s Into‐Wishing NA NAJ,,100,3.11
+Agility,2013,Q4,Novice,5,,CH Keswicke Navajo Dream Weaver At The Rendezvous VCD1 BN RA TDX OA AXJ NF,,99.17,3.52
+Agility,2013,Q4,Novice,6,,Trailwind's Right On Target VCD2 BN RN AX AXJ,,98.33,4.16
+Agility,2013,Q4,Novice,7,,Muddy Paws Three X The Charisma TD NA NAJ CGC,,97.5,3.92
+Agility,2013,Q4,Novice,8,,Mia Maria Mygas AX AXJ,,97.5,3.68
+Agility,2013,Q4,Novice,9,,Topguns Worth The Wait AX AXJ,,97.5,3.61
+Agility,2013,Q4,Novice,10,,Bris (Bree) Of The Anchorage NAJ NA CB,,97.33,2.92
+Agility,2013,Q4,Open,1,,Chiridion Driving Ms Macy OA OAJ,,99.17,3.97
+Agility,2013,Q4,Open,2,,CH Spellbound's First Edition CD BN RA AX AXJ,,99.17,3.42
+Agility,2013,Q4,Open,3,,GCH CH Dartek's Chocolat Bliss RN OA OAJ,,99.17,3.3
+Agility,2013,Q4,Open,4,,Mia Maria Mygas AX AXJ,,99,3.61
+Agility,2013,Q4,Open,5,,Topguns Worth The Wait AX AXJ,,98.5,3.8
+Agility,2013,Q4,Open,6,,CH Topguns Free To Be Me JH AX AXJ,,98.33,4.83
+Agility,2013,Q4,Open,7,,Wilden Live Out Loud AX AXJ,,98.33,3.79
+Agility,2013,Q4,Open,8,,CH Keswicke Navajo Dream Weaver At The Rendezvous VCD1 BN RA TDX OA AXJ NF,,96.83,3.4
+Agility,2013,Q4,Open,9,,Rose Marie Hermonson OA OAJ,,96.67,3.97
+Agility,2013,Q4,Open,10,,Vistah's Caru Too Hot To Tango CD RN OA OAJ,,96.67,3.76
 Rally,2013,Q4,Novice A,1,,Vinewood Once Upon A Tyme BN RN CGC,L. B. Kayee,99.33,
 Rally,2013,Q4,Novice A,2,,Easton’s Easy Ways RN,F B Leake III & S. Parry,98.00,
 Rally,2013,Q4,Novice A,3,,Epic’s Calypso BN PCD RN,S Bertram,97.66,

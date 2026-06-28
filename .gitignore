@@ -6,5 +6,12 @@ __pycache__/
 HANDOFF.md
 # superseded first-pass widget
 breed_group_widget.html
-# one-off blog-post draft (publishing artifact)
+# one-off blog-post drafts (publishing artifacts)
 blog_post.html
+blog_post_final.html
+
+# PRIVATE — member PII + raw AKC source files. Kept out of the PUBLIC repo.
+# (build_calculator.py degrades gracefully to no membership flags when this is absent.)
+raw_akc/
+# the BUILT calculator embeds the 702-member directory inline → private only
+rankings_calculator.html

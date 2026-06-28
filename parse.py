@@ -155,19 +155,23 @@ def parse_page(lines, section, year, quarter):
     # exactly the expected number of columns.
     centers = hdr_centers if len(hdr_centers) == ncols else cluster_centers(xs, ncols)
 
-    # Name/owner boundary: the OWNER column is left-aligned (nearly every owner,
-    # and every owner wrap line, starts at the same x). The dog-title prefix
-    # ("GCH CH ") and call-name also make strong left-edge modes, but the owner is
-    # always the RIGHTMOST strong mode. That is reliable across every layout.
+    # Name/owner boundary: the OWNER column is left-aligned — nearly every owner
+    # starts at the same x (its leading initial / honorific). Past the name block
+    # (x > name_left+40, which drops the "GCH CH " call-name pseudo-column), the
+    # owner's left edge is the most-frequent x0; secondary multi-owner columns
+    # sit further right but appear in fewer rows. So take the LEFTMOST of the
+    # near-universal modes — taking the rightmost would swallow a stray owner
+    # initial into the name on multi-owner entries.
     from collections import Counter
     x0c = Counter()
     for ln in lines:
         for w in ln["words"]:
-            if not NUM_RE.match(w["text"]) and name_left <= w["x0"] < numzone_x:
+            if not NUM_RE.match(w["text"]) and name_left + 40 < w["x0"] < numzone_x:
                 x0c[round(w["x0"])] += 1
-    strong = [x for x, n in x0c.items() if n >= 0.45 * len(anchors) and x > name_left + 40]
-    if strong:
-        mid = max(strong) - 5
+    if x0c:
+        maxc = max(x0c.values())
+        strong = [x for x, n in x0c.items() if n >= 0.8 * maxc]
+        mid = min(strong) - 5
 
     anchor_tops = [ln["top"] for ln, _ in anchors]
     anchor_set = {id(ln) for ln, _ in anchors}
@@ -315,6 +319,8 @@ def is_continuation(txt):
 def parse_pdf(path):
     base = os.path.basename(path)
     m = re.match(r"(\d{4})-Conformation-(Q\d)", base)
+    if not m:                       # pdfs/ also holds Obedience/Agility/Rally files
+        return []
     year, quarter = m.group(1), m.group(2)
 
     out = []

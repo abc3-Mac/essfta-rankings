@@ -1,0 +1,63 @@
+sport,category,rank,official_dog,official_score,computed_dog,computed_score,status
+Obedience,Novice B,1,VinEwood’s Better Than Diamonds CD BN NA OAJ MXP MJP NF OFF ACT1J SWN SEE SIA CGC TKI FITB 2 Mae Valley Of Running in the Wind CD BN RN MH DGD FTI,192.67,Vinewood's Better Than Diamonds CD BN RN NA OAJ MXP MJP NF OFP ACT1J SWN SEE SIA CGC TKI FITB,192.67,✅ match
+Obedience,Novice B,2,,,Mae Valley Ql Running In The Wind CD BN RN MH CGC FTI,190.17,"＋ computed, missing from our PDF parse"
+Obedience,Open B,1,CH OTCH4 RACH2 Polesitter Here You Come Again UDX9 OGM RM4 RAE4 DS,199.17,CH OTCH4 RACH2 Polesitter Here You Come Again UDX9 OGM RM4 RAE4 DS,199.17,✅ match
+Obedience,Open B,2,Bluegrass Bend Vr’s Without A Trace CDX NA NAJ,182.83,Bluegrass Bend Vr's Without A Trace CDX NA NAJ,192.83,⚠ score 182.83≠192.83
+Obedience,Utility A,1,Jj’s Prince Diamond Dalas UD CGC,187.83,Jj's Prince Diamond Dallas UD CGC,187.83,✅ match (name fmt)
+Obedience,Utility B,1,CH OTCH4 RACH2 Polesitter Here You Come Again UDX9 OGM RM4 RAE4 DS,199.17,CH OTCH4 RACH2 Polesitter Here You Come Again UDX9 OGM RM4 RAE4 DS,199.17,✅ match
+Obedience,Utility B,2,CH OTCH4 RACH2 Polesitter Here You Come Again UDX9 OGM RM4 RAE4 DS,397.80,,,"△ in official, not in raw (snapshot/legs)"
+Obedience,Beginner Novice B,1,CH Wuerlwind N Hillcrest Miranda Rights BN RA BCAT CGC TKI K Anderson/E,195.832,CH Wuerlwind N Hillcrest Miranda Rights BN RA BCAT CGC TKI,195.83,✅ match
+Obedience,Beginner Novice B,2,Calypso’s Enchanted Encounter BN CG A March,194.50,Calypso'S Enchanted Encounter BN CGC,191.17,⚠ score 194.50≠191.17
+Rally,Novice A,1,Marcenary P. Smartpuppy,95,CH Segre's Duck Duck Goose RN CGC TKN,89.67,↕ ordering (95 vs 89.67)
+Rally,Novice B,1,Cee-'N-Jay Viva Mia Ziva,99.33,Cee-'N-Jay Viva Mia Ziva RN,99.33,✅ match
+Rally,Novice B,2,Balmors Blu Belle,98.33,Balmors Blu Belle CD BN RE CA DCAT SWEE SEM DM DSA,98.33,✅ match
+Rally,Novice B,3,Halftime N' White Feathers Moon Dance,97,Halftime N' White Feathers Moon Dance RN,97.0,✅ match
+Rally,Novice B,4,Three Dove's At Last,91,Three Dove's At Last RN BCAT DS CGC TKI FITB,91.0,✅ match
+Rally,Advanced A,1,Epoch's Louder Than Words,92.33,Epoch's Louder Than Words RA,92.33,✅ match
+Rally,Advanced A,2,Rustic Quesst Grande Vitesse,89,,,"△ in official, not in raw (snapshot/legs)"
+Rally,Advanced B,1,Polesitter Here You Come Again,99.67,CH OTCH4 RACH2 Polesitter Here You Come Again UDX9 OGM RM4 RAE4 DS,99.67,✅ match
+Rally,Advanced B,2,Emerald Isle Ridgewyn Dot With Dash,98.67,CH RACH Emerald Isle Ridgewyn Dot With Dash CDX PCD BN GN RM4 RAE2 FDC OA OAJ MXP MJP2 NF XFP RATM CGCA TKA,98.67,✅ match
+Rally,Advanced B,3,Dream's Rainbow In The Dark,97.33,Dream's Rainbow In The Dark CDX PCD RM RAE2 FDC CGCA CGCU FTR,97.33,✅ match
+Rally,Advanced B,4,Balmors Blu Belle,95.33,Balmors Blu Belle CD BN RE CA DCAT SWEE SEM DM DSA,95.33,✅ match
+Rally,Advanced B,5,Sir Titan Atlas King,92.33,Sir Titan Atlas King RA CGC,92.33,✅ match
+Rally,Advanced B,6,Silver Oak Angus From Heather Isle,91.33,Silver Oak Angus From Heather Isle RM RAE3,91.33,✅ match
+Rally,Advanced B,7,Ramblewood It Ain'T My Fault,86.67,Ramblewood It Ain'T My Fault CDX BN GN RA SWN SBA THDN CGCA CGCU TKI FTN,86.67,✅ match
+Rally,Advanced B,8,Downs Lake Jean Louise,85.33,Downs Lake Jean Louise CD BN RAE TD BCAT SHDN CGC,85.33,✅ match
+Rally,Excellent B,1,Polesitter Here You Come Again,100,CH OTCH4 RACH2 Polesitter Here You Come Again UDX9 OGM RM4 RAE4 DS,100.0,✅ match
+Rally,Excellent B,2,Dream's Rainbow In The Dark,99,Dream's Rainbow In The Dark CDX PCD RM RAE2 FDC CGCA CGCU FTR,99.0,✅ match
+Rally,Excellent B,3,Downs Lake Jean Louise,95.67,Downs Lake Jean Louise CD BN RAE TD BCAT SHDN CGC,95.67,✅ match
+Rally,Excellent B,4,Emerald Isle Ridgewyn Dot With Dash,93.33,CH RACH Emerald Isle Ridgewyn Dot With Dash CDX PCD BN GN RM4 RAE2 FDC OA OAJ MXP MJP2 NF XFP RATM CGCA TKA,93.33,✅ match
+Rally,Excellent B,5,Balmors Blu Belle,91.33,Balmors Blu Belle CD BN RE CA DCAT SWEE SEM DM DSA,91.33,✅ match
+Rally,Excellent B,6,Silver Oak Angus From Heather Isle,85.33,Silver Oak Angus From Heather Isle RM RAE3,85.33,✅ match
+Rally,Excellent B,7,Alynn's Moonlight Serenade,84.67,GCH CH Alynn's Moonlight Serenade VCD1 UD RE JH,84.67,✅ match
+Rally,Master,1,Polesitter Here You Come Again,100,CH OTCH4 RACH2 Polesitter Here You Come Again UDX9 OGM RM4 RAE4 DS,100.0,✅ match
+Rally,Master,2,Dream's Rainbow In The Dark,95,Dream's Rainbow In The Dark CDX PCD RM RAE2 FDC CGCA CGCU FTR,95.0,✅ match
+Rally,Master,3,Silver Oak Angus From Heather Isle,92.33,Silver Oak Angus From Heather Isle RM RAE3,92.33,✅ match
+Rally,Master,4,Emerald Isle Ridgewyn Dot With Dash,89.33,CH RACH Emerald Isle Ridgewyn Dot With Dash CDX PCD BN GN RM4 RAE2 FDC OA OAJ MXP MJP2 NF XFP RATM CGCA TKA,89.33,✅ match
+Rally,Master,5,Downs Lake Jean Louise,88.67,Downs Lake Jean Louise CD BN RAE TD BCAT SHDN CGC,88.67,✅ match
+Rally,Master,6,Braveheart's Amazing Gracie,86,Braveheart's Amazing Gracie CD BN RE NA NAJ SEA SIN SBN CGC,86.0,✅ match
+Rally,Intermediate,1,Dartek's Eldamar & Journey's Allegro,99,GCHB CH Dartek's Eldamar & Journey's Allegro BN RI CGC TKN,99.0,✅ match
+Rally,Intermediate,2,Sir Titan Atlas King,91.33,Sir Titan Atlas King RA CGC,91.33,✅ match
+Rally,Intermediate,3,Kstar Goldmtn H Lee's Mockingbird,88.67,CH Kstar Goldmtn H Lee's Mockingbird CD BN RI CGCA TKI,88.67,✅ match
+Rally,Intermediate,4,Kehre's Just A Santa Baby,88,CH Kehre's Just A Santa Baby RI FDC BCAT CGCA TKI,88.0,✅ match
+Rally,Intermediate,5,Red Creek Raven,86,Red Creek Raven RI,86.0,✅ match
+Rally,Intermediate,6,Rainspring Moondancer,84.33,Rainspring Moondancer RI FDC NA NAJ OF CAA FCAT ACT1 ACT1J SWA SCM SIE SEE SHDE RATCH CZ8P DSX2 AS HDN NSD CGCA CGCU TKE ATT VHMA VSWE FITG,84.33,✅ match
+Rally,Intermediate,7,Lady Freckles Del Maru,82.67,,,"△ in official, not in raw (snapshot/legs)"
+Rally,Intermediate,8,Thor-Adore,79.67,,,"△ in official, not in raw (snapshot/legs)"
+Rally,High Combined,1,Polesitter Here You Come Again,199.33,,,▢ combined cat (not computed yet)
+Rally,High Combined,2,Dream's Rainbow In The Dark,195.67,,,▢ combined cat (not computed yet)
+Rally,High Combined,3,Emerald Isle Ridgewyn Dot With Dash,192,,,▢ combined cat (not computed yet)
+Rally,High Combined,4,Downs Lake Jean Louise,177.33,,,▢ combined cat (not computed yet)
+Rally,High Combined,5,Silver Oak Angus From Heather Isle,176.67,,,▢ combined cat (not computed yet)
+Rally,High Triple,1,Polesitter Here You Come Again,299,,,▢ combined cat (not computed yet)
+Rally,High Triple,2,Dream's Rainbow In The Dark,290,,,▢ combined cat (not computed yet)
+Rally,High Triple,3,Emerald Isle Ridgewyn Dot With Dash,281.33,,,▢ combined cat (not computed yet)
+Rally,High Triple,4,Downs Lake Jean Louise,265.67,,,▢ combined cat (not computed yet)
+Rally,High Triple,5,Silver Oak Angus From Heather Isle,261.67,,,▢ combined cat (not computed yet)
+Agility,Excellent A,1,PACH4 Lina Of Tx-,4.39,Vinewood Likes It Fiery Hot AX AXJ OF DCAT SIN DJA TKN,100.0,↕ ordering (4.39 vs 100.0)
+Agility,Excellent A,2,Vinewood Likes It Fiery Hot AX AXJ OF DCAT SIN DJA TKN,100.00,,,"△ in official, not in raw (snapshot/legs)"
+Agility,ESS of the Year,1,,,GCH CH MACH4 Vinewood's The Fire Inside CDX BN RN JH MXC MJB2 PJD MFG TQX T2B4,5.59,"＋ computed, missing from our PDF parse"
+Agility,ESS of the Year,2,,,MACH8 Dream A Little Yesterday And Today MXB3 MJB3 MFG TQX T2B3 TKN FITB FTN,5.08,"＋ computed, missing from our PDF parse"
+Agility,ESS of the Year,3,,,AGCH MACH20 Merfey's Meadow Of Ferns CD RA MXG5 PDS MJC5 PJS MFG TQX T2B5 BCAT RATO CGC,5.08,"＋ computed, missing from our PDF parse"
+Agility,Preferred ESS of the Year,1,,,PACH4 Lina Of Tx-Tw OA MXP11 MXPC PADP MJP12 MJPB2 PJDP PAX4 MFPS TQXP T2BP4 CGCA TKA,4.39,"＋ computed, missing from our PDF parse"
+Agility,Novice,1,,,Pine Shadows Agent At Skyfall RN NA NJP NF,88.33,"＋ computed, missing from our PDF parse"
