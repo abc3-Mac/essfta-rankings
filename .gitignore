@@ -4,6 +4,8 @@ __pycache__/
 .claude/
 # internal handoff notes (Ghost page IDs / publishing workflow) — not for the public repo
 HANDOFF.md
+# internal update-system spec (NAS/infra/credential model) — private only
+SPEC.md
 # superseded first-pass widget
 breed_group_widget.html
 # one-off blog-post drafts (publishing artifacts)
