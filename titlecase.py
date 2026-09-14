@@ -21,6 +21,9 @@ _TITLE_EXACT = {
     # championship prefixes
     "CH", "GCH", "GCHB", "GCHS", "GCHG", "GCHP", "DC", "NOHS", "FC", "AFC",
     "BIS", "BISS", "RBIS",
+    # field-trial championships (National / Amateur / Canadian) + working certs
+    "NFC", "NAFC", "CFC", "CAFC", "CNFC", "CNAFC", "FTCH", "NFTCH", "AFTCH",
+    "WD", "WDX", "WC", "WCX", "WCI",
     # obedience
     "BN", "CD", "CDX", "UD", "GO", "OGM", "VER",
     # rally

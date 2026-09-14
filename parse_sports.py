@@ -661,6 +661,29 @@ def parse_sport_pdf(path, year, sport, quarter):
     return _parse_pdftotext(lines, sport, true_year, quarter), true_year
 
 
+def valid_row(r):
+    """A row is shippable iff its score is numeric and (for Agility) passes strict
+    sanity — keeps garbled historical Agility rows out of the data. Module-level so
+    the backend updater reuses the exact same filter as main()."""
+    if not NUMERIC.match(str(r["score"])):
+        return False
+    if r["sport"] == "Agility":
+        if not (0 < float(r["score"]) <= 100):
+            return False
+        if re.match(r"^0\d", str(r["score"])):          # "076" = mis-parse
+            return False
+        if r["year"] not in OWNERLESS_AGILITY:
+            if not r["owner"].strip() or r["owner"][0].islower():  # truncated owner
+                return False
+            if not re.search(r"[a-z]", r["owner"]):     # AKC-title string, not an owner
+                return False
+        if re.match(r"^[\d.]", r["dog"]):               # YPS leaked into name
+            return False
+        if r["score2"] and float(r["score2"]) > 12:     # YPS out of range
+            return False
+    return True
+
+
 def main():
     manifest = json.load(open(os.path.join(HERE, "sports_manifest.json")))
     allrows = []
@@ -686,32 +709,8 @@ def main():
     # Quality filter: a few historical Agility reports use column orders the
     # parser can't disentangle (owner ends up empty / score non-numeric). Drop
     # those rows rather than ship garbage, and report the affected years.
-    def valid(r):
-        if not NUMERIC.match(str(r["score"])):
-            return False
-        # Obedience/Rally parse cleanly across all years (Combined classes can
-        # push scores to ~400/200, so no upper cap). Agility's historical reports
-        # use several incompatible column orders; keep only rows that pass strict
-        # sanity so we never ship a garbled Agility row.
-        if r["sport"] == "Agility":
-            if not (0 < float(r["score"]) <= 100):
-                return False
-            if re.match(r"^0\d", str(r["score"])):          # "076" = mis-parse
-                return False
-            # 2013/2015/2019 ship with owners deliberately blank — exempt them
-            # from the owner sanity checks (but still validate name/score).
-            if r["year"] not in OWNERLESS_AGILITY:
-                if not r["owner"].strip() or r["owner"][0].islower():  # truncated owner
-                    return False
-                if not re.search(r"[a-z]", r["owner"]):     # AKC-title string, not an owner
-                    return False
-            if re.match(r"^[\d.]", r["dog"]):               # YPS leaked into name
-                return False
-            if r["score2"] and float(r["score2"]) > 12:     # YPS out of range
-                return False
-        return True
-    clean = [r for r in allrows if valid(r)]
-    dropped = [r for r in allrows if not valid(r)]
+    clean = [r for r in allrows if valid_row(r)]
+    dropped = [r for r in allrows if not valid_row(r)]
     if dropped:
         from collections import Counter
         byyr = Counter((r["sport"], r["year"]) for r in dropped)

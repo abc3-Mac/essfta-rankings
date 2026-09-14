@@ -19,3 +19,11 @@ raw_akc/
 rankings_calculator.html
 # personal backup tooling (points at the private repo) — backed up to private, not public
 backup_to_private.sh
+# email staging / outgoing share artifacts — private only
+outgoing/
+# backend updater (WIP; will hold /data + secrets) — private only for now
+updater/
+# club-internal audit findings (names compilers) — private backup only for now
+comparison_Q2_2026.md
+# per-kennel award PDFs (personal club files) — private only
+awards/

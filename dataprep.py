@@ -11,6 +11,9 @@ import json, os, re
 from titlecase import tc_name, tc_owner
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+# the backend updater points this at a working copy so it can build a preview
+# without mutating the repo's canonical JSON. Defaults to the repo dir.
+DATA_DIR = os.environ.get("ESSFTA_DATA_DIR", HERE)
 
 _LEAK_RE = re.compile(r"\s*(\*[A-Z]\.)\s*")     # stray owner initial inside a name
 
@@ -29,7 +32,7 @@ def _fix_owner_leak(name, owner):
 
 
 def load_conformation():
-    rows = json.load(open(os.path.join(HERE, "breed_group.json"), encoding="utf-8"))
+    rows = json.load(open(os.path.join(DATA_DIR, "breed_group.json"), encoding="utf-8"))
     out = []
     for r in rows:
         r = dict(r)
@@ -41,7 +44,7 @@ def load_conformation():
 
 
 def load_sports():
-    rows = json.load(open(os.path.join(HERE, "sports.json"), encoding="utf-8"))
+    rows = json.load(open(os.path.join(DATA_DIR, "sports.json"), encoding="utf-8"))
     out = []
     for r in rows:
         r = dict(r)

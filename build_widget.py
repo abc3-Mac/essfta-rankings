@@ -369,7 +369,8 @@ function downloadPDF(){const d=DATA[cur],s=st[cur];
   // gather sections (spacious = one per class/section; compact = single table)
   let sections=[],nrows=0;
   if(spac){
-    const cats=d.kind==='sections'?d.cats:d.cats.filter(c=>c!==d.cats[0]);
+    let cats=d.kind==='sections'?d.cats:d.cats.filter(c=>c!==d.cats[0]);
+    if(s.cat&&s.cat!==d.cats[0])cats=cats.filter(c=>c===s.cat);
     const clsIdx=d.kind==='classes'?d.catCol:-1;
     cats.forEach(cat=>{const vc=viewForCat(cat);if(!vc)return;const rs=applyYQ(vc.rows.slice());if(!rs.length)return;
       const show=vc.headers.map((_,i)=>i).filter(i=>i!==clsIdx);
@@ -434,7 +435,8 @@ function applyYQ(rows){const s=st[cur];
   if(s.q){const q=s.q.toLowerCase();rows=rows.filter(r=>r.some(c=>String(c).toLowerCase().includes(q)));}
   return rows;}
 function renderGrouped(){const d=DATA[cur],s=st[cur],rep=document.getElementById('qrReport');rep.innerHTML='';
-  const cats=d.kind==='sections'?d.cats:d.cats.filter(c=>c!==d.cats[0]);
+  let cats=d.kind==='sections'?d.cats:d.cats.filter(c=>c!==d.cats[0]);
+  if(s.cat&&s.cat!==d.cats[0])cats=cats.filter(c=>c===s.cat);  // honor the category filter in spacious
   const clsIdx=d.kind==='classes'?d.catCol:-1;let total=0;
   cats.forEach(cat=>{const v=viewForCat(cat);if(!v)return;const rows=applyYQ(v.rows.slice());if(!rows.length)return;total+=rows.length;
     const nameIdx=v.headers.findIndex(h=>h==='Dog'||h==='Bitch'),ownIdx=v.headers.indexOf('Owner'),totIdx=Math.max(v.headers.lastIndexOf('Total'),v.headers.indexOf('Score'),v.headers.indexOf('Avg Score'));
@@ -452,7 +454,7 @@ function render(){const spac=qrRoot.classList.contains('spacious');
   document.getElementById('qrScroll').style.display=spac?'none':'';
   document.getElementById('qrPagerWrap').style.display=spac?'none':'';
   document.getElementById('qrReport').style.display=spac?'block':'none';
-  catSel.style.display=spac?'none':'';
+  catSel.style.display='';  // keep the category/class filter visible in BOTH modes
   if(spac){renderGrouped();return;}
   const d=DATA[cur],s=st[cur],v=viewFor();
   const head=document.getElementById('qrHead');head.innerHTML='';const tr=document.createElement('tr');
@@ -482,7 +484,7 @@ out = (HTML.replace("__LOGO__", logo_b64)
            .replace("__TOTAL__", f"{total_rows:,}")
            .replace("__PAYLOAD__", json.dumps(DATA, ensure_ascii=False))
            .replace("__ORDER__", json.dumps(ORDER)))
-path = os.path.join(HERE, "quarterly_rankings_widget.html")
+path = os.environ.get("ESSFTA_OUT", os.path.join(HERE, "quarterly_rankings_widget.html"))
 open(path, "w", encoding="utf-8").write(out)
 print("sports:", {k: (len(v["views"]) if v["kind"] == "sections" else len(v["rows"]))
                   for k, v in DATA.items()})
