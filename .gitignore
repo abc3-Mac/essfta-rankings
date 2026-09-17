@@ -32,3 +32,4 @@ spotlight/pdfs/
 
 # standalone per-sport/per-quarter ranking PDFs pulled from the ESSFTA media library (survey pass, not Spotlight issues) — private only
 spotlight-siblings/
+*.bak-*
