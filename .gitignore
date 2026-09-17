@@ -33,3 +33,5 @@ spotlight/pdfs/
 # standalone per-sport/per-quarter ranking PDFs pulled from the ESSFTA media library (survey pass, not Spotlight issues) — private only
 spotlight-siblings/
 *.bak-*
+# extraction staging output (derived from copyrighted magazine PDFs) — private only, not for public repo
+spotlight/staging/

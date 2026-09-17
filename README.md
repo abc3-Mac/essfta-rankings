@@ -66,8 +66,11 @@ The reports were produced by different people/tools over 2013–2026, so layouts
 - **Agility is the hard one** — it uses ~3 incompatible column orders
   (`Name|Owner|Avg|YPS`, `Name|Avg|YPS|Owner`, plus two-owner variants) and a separate
   "Springer of the Year" total-points section. `parse_sports.py` runs two parsers and
-  keeps whichever recovers more valid rows per PDF. Some early years are partial, and
-  **no Agility report was published for 2020–2022**. The widget flags missing years.
+  keeps whichever recovers more valid rows per PDF. A sibling module,
+  `parse_agility_recovery.py`, recovers three further PDFs those two parsers can't handle
+  (unprinted ranks + wrapped rows; interleaved dog-title/owner text) — see its docstring.
+  Some early years are partial, and **no Agility report was published for 2021–2022**
+  (2020 is covered). The widget flags missing years.
 
 ## AKC title & class timeline (why categories/titles differ by year)
 

@@ -19,6 +19,12 @@ RANK_LEAD = re.compile(r"^(\d+)\.?\s+(.*)$")     # "1 Dog…" or "1. Dog…"
 # dog/rank/score only, owners left blank (see HANDOFF.md).
 OWNERLESS_AGILITY = {"2013", "2015", "2019"}
 
+# 2020 Q4, 2025 Q2 and 2025 Q3 Agility are NOT handled by this module's main()
+# pipeline at all — their PDFs defeat both parsers here (interleaved text /
+# unprinted ranks / wrapped rows). They're parsed by the sibling module
+# parse_agility_recovery.py (owners recovered in full, not blank) and merged
+# in separately via the updater pipeline. See spotlight-siblings/COVERAGE.md.
+
 # lines that are never data and never a category header
 NOISE = re.compile(r"SCORECARD|Trials |Results taken|Average of|January|"
                    r"No Dogs Eligible|^Page|^\d+\s*$|rankings based|based on the|"
