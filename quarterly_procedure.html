@@ -1,0 +1,328 @@
+<title>Quarterly Rankings Procedure</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --maroon:#6B2327; --maroon2:#8A2D33; --gold:#C8A24A; --gold-soft:#E4D3A8;
+  --paper:#FBF6EB; --panel:#FFFFFF; --ink:#2A2320; --muted:#7C7166; --line:#E4DAC6;
+  --serif:'Fraunces',Georgia,serif; --sans:'Inter',-apple-system,'Helvetica Neue',Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --maroon:#D8A0A4; --maroon2:#E0B0B4; --gold:#C8A24A; --gold-soft:#6b5a2e;
+    --paper:#211B18; --panel:#2B2420; --ink:#EDE6DA; --muted:#A79B8D; --line:#463C33;
+  }
+}
+:root[data-theme="dark"]{
+  --maroon:#D8A0A4; --maroon2:#E0B0B4; --gold:#C8A24A; --gold-soft:#6b5a2e;
+  --paper:#211B18; --panel:#2B2420; --ink:#EDE6DA; --muted:#A79B8D; --line:#463C33;
+}
+body{background:var(--paper); color:var(--ink); font-family:var(--sans);
+  font-size:17.5px; line-height:1.65; padding:0 20px;}
+main{max-width:46rem; margin:0 auto; padding-block:2.5rem 4rem;}
+h1,h2,h3{font-family:var(--serif); color:var(--maroon); text-wrap:balance; line-height:1.2;}
+h1{font-size:2.1rem; font-weight:600; margin:0 0 .3rem;}
+h2{font-size:1.45rem; font-weight:600; margin:2.6rem 0 .8rem; padding-bottom:.35rem;
+   border-bottom:2px solid var(--gold);}
+h3{font-size:1.12rem; font-weight:600; margin:1.6rem 0 .4rem; color:var(--maroon2);}
+p{margin:.7rem 0;}
+.kicker{font-family:var(--sans); font-size:.78rem; font-weight:600; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--muted); margin-bottom:.6rem;}
+.dateline{color:var(--muted); font-size:.95rem; margin-bottom:2rem;}
+.note{background:var(--panel); border:1px solid var(--line); border-left:4px solid var(--gold);
+  border-radius:8px; padding:.85rem 1.1rem; margin:1.2rem 0;}
+.note p{margin:.35rem 0;}
+ol.steps{list-style:none; counter-reset:step; margin:1.4rem 0; padding:0;
+  display:flex; flex-direction:column; gap:1.1rem;}
+ol.steps>li{counter-increment:step; position:relative; padding-left:3.4rem;}
+ol.steps>li::before{content:counter(step); position:absolute; left:0; top:.05rem;
+  width:2.3rem; height:2.3rem; border-radius:50%; background:var(--maroon); color:var(--paper);
+  font-family:var(--serif); font-weight:600; font-size:1.15rem;
+  display:flex; align-items:center; justify-content:center;}
+:root[data-theme="dark"] ol.steps>li::before{background:var(--gold); color:#211B18;}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) ol.steps>li::before{background:var(--gold); color:#211B18;}
+}
+ol.steps b.t{display:block; font-size:1.05rem; margin-bottom:.15rem;}
+ul{margin:.6rem 0; padding-left:1.3rem;}
+li{margin:.35rem 0;}
+table{border-collapse:collapse; width:100%; font-size:.95rem; margin:.9rem 0;
+  font-variant-numeric:tabular-nums;}
+th{font-family:var(--sans); text-align:left; color:var(--maroon); font-weight:700;
+  border-bottom:2px solid var(--gold); padding:.5rem .7rem; font-size:.88rem;
+  letter-spacing:.03em;}
+td{padding:.5rem .7rem; border-bottom:1px solid var(--line); vertical-align:top;}
+.tblwrap{overflow-x:auto;}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.88em;
+  background:var(--panel); border:1px solid var(--line); border-radius:4px; padding:.08em .35em;}
+.appendix{margin-top:3.2rem; border-top:3px double var(--gold); padding-top:.6rem;}
+.applabel{font-family:var(--sans); font-size:.78rem; font-weight:700; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--gold); margin:1.6rem 0 0;}
+:root[data-theme="light"] .applabel{color:#9a7a2e;}
+.foot{margin-top:3.5rem; padding-top:1rem; border-top:1px solid var(--line);
+  color:var(--muted); font-size:.9rem;}
+strong{color:var(--maroon2);}
+</style>
+<main>
+<p class="kicker">English Springer Spaniel Field Trial Association · Companion Events</p>
+<h1>Quarterly Rankings Procedure</h1>
+<p class="dateline">How the quarterly rankings are calculated from official AKC data · September 2026 · rules confirmed with Polly Mumma and Betsy Baird · updated September 16 (S-line and tie conventions)</p>
+
+<p>This page describes, start to finish, how a quarterly ranking report is produced.
+The front section is the procedure in plain words. The appendices give the precise rule
+for every award, a guide to reading the AKC report files, and the record of how these
+rules were verified.</p>
+
+<h2>What you need</h2>
+<ul>
+<li><strong>The AKC Quarterly Electronic Reports</strong> — one spreadsheet per sport
+(Obedience, Rally, Agility, Conformation, Juniors), sent by the AKC each quarter.
+<em>Each file covers only its own three months.</em> A January-through-June report
+therefore needs both the 1st-quarter and 2nd-quarter files; the year-end report needs
+all four.</li>
+<li><strong>The New Titles file</strong> — the AKC's monthly list of every title earned by
+every Springer, kept as a running master file. This is how you know which year a dog
+earned its title.</li>
+<li><strong>The ESSFTA membership list</strong> — used only to mark members with an
+asterisk. Membership never decides who appears in the quarterly standings.</li>
+</ul>
+<p><strong>Ties, in every sport:</strong> tied dogs are listed alphabetically by
+registered name (championship prefixes ignored) and share a rank number; the next rank
+skips accordingly — 1, 1, 1, 4. Alphabetical order keeps tie listings above any
+suspicion of favoritism.</p>
+<p><strong>Class order on the card:</strong> regular titling classes come first, then the
+optional ones — in rally, Master is listed before Intermediate, which is an optional
+titling class; obedience follows the scorecard's order (Novice, Open, Utility, Combined,
+Preferred, then Beginner Novice and Graduate).</p>
+<h2>The procedure</h2>
+<ol class="steps">
+<li><b class="t">Gather the quarter's files.</b>
+Collect every sport's report for every quarter of the year so far. Do not assume one
+file holds the whole year — it never does.</li>
+<li><b class="t">Load them into the Rankings Calculator.</b>
+Open the calculator page and drop all the files in at once. It recognizes each sport
+automatically, combines the quarters, applies the rules in Appendix A, and marks
+members with an asterisk. The files never leave the computer.</li>
+<li><b class="t">Read the draft it produces.</b>
+The calculator shows every class ranking, High Combined and High Triple for rally, the
+combined award for obedience, and the agility awards, each with the rule it applied
+printed beside it.</li>
+<li><b class="t">Compare against the compiler's worksheet.</b>
+Where the two disagree, the difference is always one of two things: a data question
+(a typo, a missed line, a stale download) or a rule question (a nuance the calculator
+does not know yet). The AKC report is the club's official source, so check the
+disputed dog's actual lines in the AKC file — they settle most differences in a
+minute. Rule questions go to the sport's governor.</li>
+<li><b class="t">Publish the agreed report.</b>
+Once the worksheet and the calculator tell the same story, the report is ready for
+members. The calculator exports it as a Word document or a PDF in either portrait or
+landscape.</li>
+</ol>
+
+<h2>The rules in one breath</h2>
+<p><strong>Obedience.</strong> A dog appears in a class once it has three qualifying
+scores there, and it is ranked on the average of its three highest. Only real runs
+count: a specialty line marked <code>S</code> is the same run recorded in a second
+judge's book, and trophy lines carry no score of their own — neither is ever counted.
+A dog is listed in a titling class only in the year it earns that title, with all
+three legs earned that year. The Combined Open B/Utility award adds a dog's best Open
+B and best Utility score from the same trial and averages the five best totals; a dog
+needs five such trials to be listed.</p>
+<p><strong>Rally.</strong> The same three-highest rule, and the same reading of the
+specialty <code>S</code> lines: one run, one score — never counted twice (club decision,
+September 16, 2026). High Combined (Advanced B + Excellent B) and High Triple (those
+plus Master) pair a day's scores class by class, best with best, and average the three
+best combined totals.</p>
+<p><strong>Agility.</strong> The ESS of the Year award needs at least ten double-Qs
+(qualifying in both Excellent B Standard and Jumpers the same day) and ranks by the
+average speed of the fastest ten. Novice and Open rank on the average of the first six
+qualifying runs — the three Standard and three Jumpers legs that earn the title.
+Excellent A ranks on average score, with at least three Standard and three Jumpers
+scores required.</p>
+<p><strong>Conformation.</strong> Best of Breed points are one point per dog defeated
+at the show; Best of Opposite Sex adds the Best of Winners credit when it applies;
+Group and Best in Show points are dogs defeated in the group and in the show. The
+club's own database produces this report — the calculator reproduces it for
+verification.</p>
+
+<h2>How many scores it takes</h2>
+<p>Three qualifying scores is the rule everywhere in the obedience and rally classes:
+three to be listed, ranked on the average of the best three. It changes in five places.</p>
+<div class="tblwrap">
+<table>
+<tr><th>Award</th><th>What it takes</th></tr>
+<tr><td>Obedience and rally classes</td><td><strong>Three</strong> qualifying scores;
+average of the best three</td></tr>
+<tr><td>Obedience Combined Open B/Utility</td><td><strong>Five</strong> trials with both
+an Open B and a Utility score; average of the five highest totals</td></tr>
+<tr><td>Rally High Combined and High Triple</td><td><strong>Three days</strong> on which
+the dog qualified in every class the award requires; average of the best three day
+totals (the year-end award uses the best five)</td></tr>
+<tr><td>Agility Springer of the Year</td><td><strong>Ten</strong> double-Qs in Excellent
+B; average speed of the fastest ten</td></tr>
+<tr><td>Agility Novice and Open</td><td><strong>Three Standard and three Jumpers</strong>
+legs — the six that earn the title — averaged</td></tr>
+<tr><td>Agility Excellent A</td><td><strong>Three Standard and three Jumpers</strong>
+scores to be eligible; then all qualifying scores are averaged</td></tr>
+</table>
+</div>
+<p>Two awards have no minimum at all: the year-end Preferred agility award simply totals
+every Preferred qualifying run, and juniors and conformation are not score-based, so
+every handler or dog with a result appears.</p>
+
+<div class="note">
+<p><strong>Why compute from the raw AKC data at all?</strong> Because it verifies both
+directions. In the 2026 mid-year review, computing from the raw files caught a
+carried-forward typo, a missing dog, and a spreadsheet that had summed 98&#8202;+&#8202;95 as
+196 — and, in the other direction, the compilers' worksheets caught rules the computer
+did not know. The finished cards are now confirmed to the last decimal.</p>
+</div>
+
+<div class="appendix">
+<p class="applabel">Appendix A</p>
+<h2>The precise rules, award by award</h2>
+
+<h3>Obedience</h3>
+<ul>
+<li><strong>Class rankings.</strong> For every class: at least three qualifying scores
+in the calendar year; rank by the average of the three highest. Classes keep A and B
+separate. Placements are shown but add no points.</li>
+<li><strong>What counts as a qualifying score.</strong> A line whose placement is
+1&#8211;4 or a plain qualifying mark. Lines with an <code>S</code> placement are the
+same run recorded in a concurrent specialty's judge's book — two placements, two sets
+of prizes, one score — and are never counted. Trophy lines (High in Trial, High
+Combined, and similar) repeat scores already counted, or carry combined totals that
+are not run scores; they are never counted.</li>
+<li><strong>Titling classes and the calendar.</strong> A dog appears in a titling
+class (Novice A/B, Open A, Utility A, Beginner Novice A/B, the Preferred classes)
+only in the year its title is dated, and only when all three title legs fall in that
+year. A dog that finished its title using a leg from a previous year is not listed,
+even if the title certificate is dated this year. The New Titles file is the
+reference for title dates; previous years' titles show in the AKC's earlier
+title reports.</li>
+<li><strong>Combined Open B/Utility.</strong> For each trial where the dog qualified
+in both Open B and Utility (A or B), add the two scores. Rank by the average of the
+five highest totals; a minimum of five combined trials is required to be listed. The
+AKC report's own "combined" award lines carry no scores — the totals must be computed
+from the two class scores.</li>
+</ul>
+
+<h3>Rally</h3>
+<ul>
+<li><strong>Class rankings.</strong> Three qualifying scores to appear; rank by the
+average of the three highest. Choice is ranked like any other class.</li>
+<li><strong>The specialty lines.</strong> <code>S1/S2/S3</code> lines are the same
+run recorded a second time in a concurrent specialty's judge's book and are
+<strong>never counted</strong> — one run, one score, exactly as in obedience (club
+decision, September 16, 2026). Award lines (<code>HTQ</code>, <code>HIGHCM</code>,
+<code>HCS</code>, <code>HTQS</code>) hold combined totals, not run scores, and are
+never counted either.</li>
+<li><strong>High Combined and High Triple.</strong> High Combined pairs Advanced B
+with Excellent B; High Triple adds Master. For each day (event and date), pair the
+dog's scores class by class — on a day with two scores per class, the best pairs with
+the best and the second with the second, giving two combined totals. Rank by the
+average of the three highest totals; at least three totals to be listed. The
+year-end award uses the five highest instead.</li>
+</ul>
+
+<h3>Agility</h3>
+<ul>
+<li><strong>ESS of the Year.</strong> At least ten double-Qs in Excellent B; rank by
+the average yards-per-second of the fastest ten. A double-Q is qualifying in both
+Standard and Jumpers on the same day; its speed is the mean of the two runs
+(speed = course distance ÷ dog's time).</li>
+<li><strong>Novice and Open.</strong> Average of the first six qualifying runs: the
+three Standard and three Jumpers legs that earn the title.</li>
+<li><strong>Excellent A.</strong> Average of the qualifying scores, with an
+eligibility requirement of at least three Standard and three Jumpers scores.</li>
+<li><strong>Preferred.</strong> The quarterly sheet ranks Preferred ESS of the Year by
+the fastest-ten double-Q speed in the Preferred classes; the year-end award totals
+all Preferred qualifying runs, ties broken by speed. Preferred class awards average
+across both preferred classes' legs together.</li>
+</ul>
+
+<h3>Conformation</h3>
+<ul>
+<li><strong>Best of Breed points</strong> — one point for every dog and bitch defeated
+at the show, classes included.</li>
+<li><strong>Best of Opposite Sex points</strong> — one point per same-sex dog
+defeated, plus, when Best of Winners went to the same sex as the BOS winner, one
+point for every dog shown in the classes.</li>
+<li><strong>Group and Best in Show</strong> — one point per dog defeated in the group
+or in the show; on a Best in Show day the group points fold into the BIS points, with
+no double counting.</li>
+<li>Owner-handled and puppy series are separate programs and are not counted. The
+"Spec" columns count specialties and the National, plus club-designated supported
+entries at all-breed shows — the supported-entry list lives in the club calendar, not
+the AKC data.</li>
+</ul>
+
+<p class="applabel">Appendix B</p>
+<h2>Reading the AKC report files</h2>
+<p>Every sport's file has one row per recorded result, keyed by AKC registration
+number — the registration number, not the dog's name, is the dog's identity, because
+names grow new title letters through the year.</p>
+
+<div class="tblwrap">
+<table>
+<tr><th>Placement code</th><th>What it is</th><th>Obedience</th><th>Rally</th></tr>
+<tr><td><code>QLFY</code>, <code>1</code>&#8211;<code>4</code></td>
+<td>A real qualifying run</td><td>counts</td><td>counts</td></tr>
+<tr><td><code>S1</code>, <code>S2</code>, <code>S3</code></td>
+<td>The same run recorded in a concurrent specialty's judge's book</td>
+<td>never counts</td><td>never counts (club decision, Sept 2026)</td></tr>
+<tr><td><code>HIGHT</code>, <code>HIGHCM</code>, <code>HTS</code>, <code>HTP</code>,
+<code>HTQ</code>, <code>HTQS</code>, <code>HCS</code></td>
+<td>Trophy and award markers — duplicates or combined totals</td>
+<td>never counts</td><td>never counts</td></tr>
+</table>
+</div>
+
+<p>Things the files do that are easy to trip over:</p>
+<ul>
+<li><strong>Each file is one quarter only.</strong> The published reports are
+year-to-date, so every quarter's file must be loaded together.</li>
+<li><strong>Dog names contain invisible non-breaking spaces</strong> and accumulate
+title letters as the year goes on. Match dogs by registration number.</li>
+<li><strong>Two-trial days.</strong> At ordinary clubs, both trials' runs appear as
+ordinary rows. The <code>S</code> lines appear only at Springer specialty events.</li>
+<li><strong>Hand-tallying hazard.</strong> When day scores are copied into a
+worksheet, a two-trial day invites the classic slip of pairing or adding the wrong
+two numbers. The 2026 mid-year review found exactly one of these (98&#8202;+&#8202;95
+recorded as 196), which is a good argument for letting the calculator do the
+addition.</li>
+</ul>
+
+<p class="applabel">Appendix C</p>
+<h2>How these rules were verified</h2>
+<p>The rules above are not guesses; each was tested by computing the rankings from
+the raw AKC files and comparing against the finished reports, then resolving every
+difference with the sport's governor.</p>
+<ul>
+<li><strong>Q1 2026:</strong> the computed rankings reproduced the published reports
+to the decimal for all three companion sports.</li>
+<li><strong>Jan&#8211;Jun 2026 Agility:</strong> perfect reconciliation with the
+compiled stats sheet — every award, every value, same order.</li>
+<li><strong>Jan&#8211;Jun 2026 Conformation:</strong> every rank, count, and points
+cell reproduced exactly against the club's database output (805 cells), except the
+supported-entry counts the AKC data cannot see.</li>
+<li><strong>Jan&#8211;Jun 2026 Rally:</strong> the card and the calculator first
+reconciled on all 91 values, which is what exposed the specialty lines as double
+recordings; the corrected card applies the one-run-one-score rule adopted on
+September 16.</li>
+<li><strong>Jan&#8211;Jun 2026 Obedience:</strong> the corrected scorecard and the
+calculator agree on every value but three cells still under review; the method
+itself — three highest, specialty lines excluded, combined minimum of five — is
+confirmed by the compiler.</li>
+<li><strong>Titles:</strong> every dog listed in a titling class was checked against
+the AKC New Titles file; all thirteen title dates fall inside the ranking window.</li>
+</ul>
+<p>The one open policy item was settled on September 16, 2026: rally now reads the
+specialty <code>S</code> lines exactly as obedience does — one run, one score. Both
+sports use the same rule, chosen deliberately.</p>
+
+<p class="foot">Prepared from the 2026 mid-year reconciliation of AKC Electronic
+Reports against the compiled quarterly cards, with rules confirmed by Polly Mumma
+(rally, scoring) and Betsy Baird (obedience). The Rankings Calculator applies every
+rule on this page automatically; a regression test suite re-checks all of them each
+quarter.</p>
+</main>

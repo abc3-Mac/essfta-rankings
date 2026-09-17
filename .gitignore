@@ -27,3 +27,8 @@ updater/
 comparison_Q2_2026.md
 # per-kennel award PDFs (personal club files) — private only
 awards/
+# Springer Spotlight back-issue PDFs (magazine copyright) — private only, not for public repo
+spotlight/pdfs/
+
+# standalone per-sport/per-quarter ranking PDFs pulled from the ESSFTA media library (survey pass, not Spotlight issues) — private only
+spotlight-siblings/

@@ -19,6 +19,50 @@ the rankings calculator; ⚠️ marks the few points still awaiting club confirm
 3. **An asterisk marks an ESSFTA member.** Membership never decides who is ranked —
    it only annotates. (Annual *awards* additionally require membership; the quarterly
    standings list everyone.)
+4. **Ties (Polly Mumma, September 2026).** When two dogs end up with the same score,
+   neither beat the other, so two things follow.
+   - They are listed in **alphabetical order by the dog's name** — the name itself, not
+     the titles in front of it. "CH OTCH4 RACH2 Polesitter Here You Come Again" files
+     under P for Polesitter, not under C for Champion. That way no one can wonder why one
+     dog was put ahead of another: the alphabet decided, not a person.
+   - They get the **same number**, and the next dog picks up where the count actually
+     stands. If three dogs tie at 100, all three are number 1 and the next dog is
+     number 4, because there really are three dogs ahead of it. Numbering tied dogs
+     1, 2, 3 would say one finished ahead of another, and that isn't true.
+
+   Same score means same rank, listed by name in alphabetical order. (Titles that follow
+   the name — CD, RM, RAE, CGC — never affect the order. Ties are judged on the score as
+   printed, to two decimals. In agility's Preferred award, where dogs are counted on
+   qualifying runs and separated by speed, they share a rank only when both match, and
+   then the alphabet decides.)
+
+---
+
+## How many scores it takes
+
+Three qualifying scores is the rule everywhere in the obedience and rally classes: three
+to be listed, ranked on the average of the best three. It changes in five places.
+
+- **Obedience Combined Open B/Utility — five.** A dog needs five trials where it
+  qualified in both Open B and Utility, and is ranked on the average of the five highest
+  combined totals.
+- **Rally High Combined and High Triple — three, but three *days*.** The count is of
+  combined day totals, so a dog needs three days on which it qualified in every class the
+  award requires. At year end, Rally Springer of the Year uses the best five.
+- **Agility Springer of the Year — ten.** Ten double-Qs in Excellent B, ranked on the
+  average speed of the fastest ten.
+- **Agility Novice and Open — three in each half.** Three Standard and three Jumpers
+  legs, the six that earn the title, averaged.
+- **Agility Excellent A — three in each half again.** Three Standard and three Jumpers
+  scores to be eligible; then all the dog's qualifying scores are averaged.
+
+Two awards have no minimum at all: the year-end Preferred agility award simply totals
+every Preferred qualifying run, and juniors and conformation are not score-based, so
+every handler or dog with a result appears.
+
+*(In `build_calculator.py`: the plain three-score rule at line 197, obedience Combined's
+five at 217, rally's three combined days at 230, the ten double-Qs at 205, and the
+three-and-three agility checks at 239.)*
 
 ---
 
@@ -29,35 +73,57 @@ the rankings calculator; ⚠️ marks the few points still awaiting club confirm
 - Only real qualifying runs count: a placement of 1st–4th or a plain qualifying score.
   Trophy rows on the AKC report (High in Trial, High Combined, and similar) are
   duplicates of runs already counted — they are not extra scores.
-- ⚠️ **Second-trial scores:** rally counts them (see below); the obedience report
-  behaves as if obedience does **not**. The calculator matches the report. Awaiting
-  Polly's confirmation.
-- **Combined Open B / Utility:** for each trial where the dog qualified in both Open B
-  and Utility (A or B), add the two scores. The ranking value is the **average of the
-  five best** such combined totals; a dog needs at least three combined trials to be
-  listed. (The AKC report's own "combined" rows carry no scores — the combination must
-  be computed from the two class scores.)
+- **The S-rows, explained (Betsy, 9/16 — CONFIRMED):** a breed club may run an
+  all-breed obedience/rally event and a breed specialty **concurrently**. The team
+  **runs once**, but the score is recorded in **two judges' books** — two placements,
+  two sets of prizes, **one score**. Any AKC-report line with an `S` placement is that
+  second recording and is **never used** in computing a dog's obedience ranking. (This
+  matches the title-file evidence: Laurelwyn's Heartthrob's S-rows earned her no
+  Beginner Novice title — she has two real runs.) As of September 16, 2026 rally
+  reads these lines the same way (see the Rally section) — the two sports agree.
+- **Rankings (Betsy, 9/16 — CONFIRMED):** the **three highest** qualifying scores, for
+  every obedience class except Combined. HIT/HC/trophy rows are duplicates, never
+  scores. (So "the three title legs" and "best three" coincide in practice: with
+  S-rows excluded, a title-class dog rarely has a fourth same-year leg.)
+- **Combined Open B/Utility (Betsy, 9/16):** ranked on the **five highest** combined
+  totals, and a dog needs a **minimum of five** combined trials to be listed (encoded;
+  Polesitter has 15, the one-trial dog stays off).
+- **Title classes and prior years:** a dog is listed only in the **year its title is
+  dated** with **all three legs that year** — validated 13/13 against the Q2 card.
+  Lawman's CD is dated January 18, 2026, but one leg came from 2025 → excluded. Betsy
+  spots old titles from AKC's previous-titles reports or her worksheet notes; the
+  **monthly AKC title file** (raw_akc/New Titles 2026.xlsx, master kept by Polly) is
+  the machine-readable source. B classes are unaffected (a dog may keep entering;
+  best three of all legs, e.g. Polesitter's Open B 199.17 from 17).
+- **Quarterly vs annual (Betsy, 9/16):** the quarterly rankings are cumulative and can
+  in rare cases differ from the year-end award computation; the quarterlies exist to
+  make the year-end determination easy. (The AKC report's own "combined" rows carry no
+  scores — combined totals must always be computed from the two class scores.)
 
 ## Rally
 
 - **Same best-three rule as obedience:** three qualifying scores to appear, ranked by
-  the average of the best three.
-- **The rule that unlocked everything (Polly, 9/14):** many clusters hold **two trials
-  in one day**. The AKC report shows the second trial's results as special-placement
-  rows (S1, S2, S3) that repeat the score — **both scores count**. A dog that qualified
-  twice on Saturday and twice on Sunday has four scores, not two. (Trophy rows —
-  High Triple Qualifier, High Combined, and similar — remain non-scores, as in
-  obedience; their "score" fields hold combined totals, not runs.)
-- **Choice** is ranked like any other class (best three).
+  the average of the best three. **Choice** is ranked like any other class.
+- **The specialty S lines are never counted (club decision, September 16, 2026):** an
+  S line is the same run recorded a second time in a concurrent specialty's judge's
+  book — see the obedience section for the mechanism, which is identical. Rally reads
+  them exactly as obedience does: one run, one score. (The first Q2 card counted them
+  as second scores; Polly adopted the obedience reading on 9/16, and the corrected
+  card — outgoing/ESSFTA_Rally_2026_JanJun_CORRECTED_v2.pdf, and Polly's own revised card
+  of the same evening — supersedes it.) Trophy rows
+  (High Triple Qualifier, High Combined, and similar) are never scores either.
 - **High Combined** (Advanced B + Excellent B) and **High Triple** (Advanced B +
-  Excellent B + Master): a combined total exists only when the dog qualified in **all
-  the required classes on the same day, in the same trial** — pairs are taken in the
-  order listed on the AKC report, and a day without a full qualifying set contributes
-  nothing. The **quarterly** standings use the **average of the best three** combined
-  totals; the **annual** Rally Springer of the Year uses the **top five**.
-  ⚠️ On a two-trial day it is not always possible to tell from the AKC file which score
-  belongs to which trial; in rare cases (one dog so far, by 0.34) the compiler's pairing
-  and the calculator's may differ. The compiler's number governs.
+  Excellent B + Master): for each day (event and date) where the dog qualified in all
+  the required classes, pair the day's scores class by class, best with best; the
+  **quarterly** standings use the **average of the best three** combined totals (at
+  least three to list); the **annual** Rally Springer of the Year uses the **top five**.
+- **Ties:** see ground rule 4 — same score, same rank, alphabetical by name. Advanced B
+  in the corrected Q2 card runs 1, 1, 1, 4, 4, 4, 7, 8, 9, 10.
+- **Class order on the card (Polly 9/16):** regular titling classes first, then optional —
+  Novice A/B, Advanced A/B, Excellent A/B, **Master**, then **Intermediate** (an optional
+  titling class), Choice, High Combined, High Triple. Obedience follows Betsy's scorecard
+  order: Novice, Open, Utility, Combined, the Preferred classes, then Beginner Novice and
+  Graduate.
 
 ## Agility
 
@@ -106,12 +172,28 @@ exactly and match the wording on the club's awards page.*
 
 ---
 
-## The five obedience questions still open with the club (9/14)
+## Questions still open with the club (updated 9/15)
 
-Bluegrass Bend (182.83 vs the file's 192.83) · McD's According To My Heart (197.83 vs
-199.17) · Calypso's Enchanted Encounter (score and owner) · Shogun's missing score
-(195.33) · Preferred Novice (Hail Mary's late-June title). None involves second-trial
-scores; all are believed slips or timing.
+**Obedience score items (9/14, unchanged):** Bluegrass Bend (182.83 vs the file's 192.83) ·
+McD's According To My Heart (197.83 vs 199.17) · Calypso's Enchanted Encounter (score and
+owner) · Shogun's missing score (195.33) · Preferred Novice (Hail Mary's late-June title).
+None involves second-trial scores; all are believed slips or timing.
+
+**Resolved:** rally rev 3 = 91/91 (CLOSED). Betsy's 9/16 answers + corrected scorecard
+settle obedience method entirely (S-rows explained, best-3-highest, Combined min-5 —
+encoded). Her corrected card adopts Bluegrass 192.83, McD's 199.17, Shogun's 195.33,
+Hail Mary 198.33, and Jj's Prince Diamond Dallas 187.83.
+
+**Still open — three cells on the corrected obedience card:**
+1. Reddoor's Castine Pearl, Novice B: card 180.50 vs AKC legs 183.5+183.0+174.0 → 180.17.
+2. Sapphires Where The Heart Is, Open A: card 188.33 vs AKC legs 191.5+188.5+185.5 → 188.50.
+3. Calypso's Enchanted Encounter, BN B: card 194.50 / owner "A March*" vs AKC 194.0+
+   191.5+188.0 → 191.17 / owner Sherry Savar ("A March" appears in no AKC owner field,
+   either quarter — Betsy herself asks "who is A March?").
+**S-line policy: RESOLVED 9/16** — Polly adopted the obedience reading ("I'm just
+copying what you've done"): one run, one score, both sports. The corrected rally Q2
+card (six dogs off, seven values changed, new firsts in Novice A and Intermediate,
+alpha-tie ordering with shared ranks) is computed and with Polly to issue.
 
 ---
 
@@ -120,7 +202,7 @@ scores; all are believed slips or timing.
 | Plain term | AKC file term |
 |---|---|
 | qualifying run | `Placement` ∈ {QLFY, 1, 2, 3, 4} |
-| second-trial score (rally only) | `Placement` ∈ {S1, S2, S3} |
+| specialty book line — never a score (any sport) | `Placement` ∈ {S1, S2, S3} |
 | trophy row (never a score) | `Placement` ∈ {HIGHT, HIGHCM, HTQ, HTQS, HCS, HTP, HTS} |
 | a trial/day | `Event Name` + `Event Date` |
 | dog identity | `Reg Number` (exact; names accrete titles over the year) |

@@ -36,11 +36,19 @@ def rank_cell(r):
     return f"{r['rank']} (T)" if r.get("tie") else str(r["rank"])
 
 
-def newest_first(rows, yi=0, ri=2):
+QORD = {"Q4": 4, "Q3": 3, "Q2": 2, "Q1": 1}
+
+
+def newest_first(rows, yi=0, ri=2, ci=None):
+    """Newest year first, then newest quarter. When ci (the Class column) is given,
+    rows are GROUPED BY CLASS inside each quarter and ranked 1..n within the class —
+    the way the club's own cards read (Jill Kristine, 17 Sept 2026): interleaving
+    every class's #1, then every class's #2, hides where the competition sits."""
     def k(row):
         yr = -int(row[yi]) if str(row[yi]).isdigit() else 0
+        qt = -QORD.get(str(row[1]).strip().upper(), 0)
         rk = int(re.sub(r"\D", "", str(row[ri])) or 0)
-        return (yr, rk)
+        return (yr, qt, str(row[ci]) if ci is not None else "", rk)
     return sorted(rows, key=k)
 
 
@@ -61,8 +69,9 @@ def build_conformation():
         cats.append(label)
         views[label] = {"headers": headers, "numeric": numeric, "rows": rows}
     years = sorted({r["year"] for r in conf}, reverse=True)
-    return {"label": "Breed / Group", "kind": "sections",
-            "cats": cats, "views": views, "years": years}
+    quarters = sorted({r["quarter"] for r in conf}, key=lambda q: -QORD.get(q, 0))
+    return {"label": "Breed / Group", "kind": "sections", "qtrCol": 1,
+            "cats": cats, "views": views, "years": years, "quarters": quarters}
 
 
 # ------------------------------------------------------- obedience/agility/rally
@@ -83,24 +92,38 @@ def norm_category(sport, c):
     return c or "Overall"
 
 
+# Agility classes the club ranks on speed alone: its card prints ONE column,
+# "Ave YPS", for these (see any 20xx-Agility-Qn.pdf). Our parser stored that
+# number in the first score slot, so the viewer showed a 4.28 yards-per-second
+# figure under "Avg Score" — reported by Jill Kristine, 17 Sept 2026. Values for
+# these classes belong in the YPS column with Avg Score left empty.
+YPS_RANKED = {"Excellent B", "Preferred Excellent B"}
+
+
 def build_sport(sport, score_hdrs):
     """score_hdrs: list of (key, Header) for the trailing numeric columns."""
     headers = ["Year", "Qtr", "Class", "Rank", "Dog", "Owner"] + [h for _, h in score_hdrs]
     numeric = [True, False, False, True, False, False] + [True] * len(score_hdrs)
+    keys = [k for k, _ in score_hdrs]
     rows = []
     for r in sports:
         if r["sport"] != sport:
             continue
         cat = norm_category(sport, r["category"])
         row = [r["year"], r["quarter"], cat, rank_cell(r), r["dog"], r["owner"]]
-        row += [r.get(k, "") for k, _ in score_hdrs]
+        vals = [r.get(k, "") for k in keys]
+        if (sport == "Agility" and cat in YPS_RANKED
+                and keys[:2] == ["score", "score2"] and vals[0] and not vals[1]):
+            vals = ["", vals[0]]
+        row += vals
         rows.append(row)
-    rows = newest_first(rows, yi=0, ri=3)
+    rows = newest_first(rows, yi=0, ri=3, ci=2)
     cats = ["All classes"] + sorted({row[2] for row in rows})
     years = sorted({row[0] for row in rows}, reverse=True)
-    return {"label": sport, "kind": "classes", "catCol": 2,
+    quarters = sorted({row[1] for row in rows}, key=lambda q: -QORD.get(q, 0))
+    return {"label": sport, "kind": "classes", "catCol": 2, "qtrCol": 1,
             "headers": headers, "numeric": numeric, "rows": rows,
-            "cats": cats, "years": years}
+            "cats": cats, "years": years, "quarters": quarters}
 
 
 DATA = {
@@ -252,7 +275,7 @@ HTML = r'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name
   .qr-miss{margin:-4px 0 14px;font-size:12.5px;color:#9a6a1a;background:#FBF1E0;border-radius:6px;padding:7px 12px;display:none;}
   .qr-miss.show{display:block;}
   .qr-scrollbox{position:relative;}
-  .qr-tablewrap{overflow-x:auto;border-radius:10px;border:1px solid var(--line);background:#fff;-webkit-overflow-scrolling:touch;}
+  .qr-tablewrap{overflow-x:auto;border-radius:10px;border:1px solid var(--line);background:#fff;-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y;overscroll-behavior-x:contain;max-width:100%;}
   .qr-fade{position:absolute;top:0;bottom:0;width:48px;pointer-events:none;opacity:0;transition:opacity .2s;z-index:5;border-radius:10px;}
   .qr-fade.r{right:0;background:linear-gradient(to right,rgba(255,255,255,0),rgba(107,35,39,.16));}
   .qr-scrollbox.can-r .qr-fade.r{opacity:1;}
@@ -283,10 +306,11 @@ HTML = r'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name
   <div class="qr-head"><img alt="ESSFTA" src="data:image/png;base64,__LOGO__"><div><h1>Quarterly Rankings</h1><p>English Springer Spaniel Field Trial Association · Parent Club · __SPAN__</p></div></div>
   <div class="qr-tabs" id="qrTabs"></div>
   <div class="qr-body">
-    <div class="qr-help"><b>How to use:</b> pick a <b>sport</b> above, choose a <b>category</b> and <b>year</b>, type in <b>search</b> to filter by dog or owner, click a column heading to <b>sort</b>, and <b>scroll the table sideways</b> to see every column. Standings are year-end (labeled Q4); the latest year shows progress to date.</div>
+    <div class="qr-help"><b>How to use:</b> pick a <b>sport</b> above, then narrow by <b>class</b>, <b>year</b> and <b>quarter</b>, type in <b>search</b> to filter by dog or owner, and click a column heading to <b>sort</b> — clicking <b>Class</b> keeps each class together in rank order. Rows are grouped by class within each quarter. <b>Scroll the table sideways</b> for the remaining columns, or switch to <b>Spacious</b> for a class-by-class report. Standings are cumulative for the year to date; a year's final figures are labeled Q4.</div>
     <div class="qr-toolbar">
       <select class="qr-sel" id="qrCat"></select>
       <select class="qr-sel" id="qrYear"></select>
+      <select class="qr-sel" id="qrQtr" title="Show a single quarter"></select>
       <input class="qr-search" id="qrSearch" placeholder="Search dog or owner…">
       <button class="qr-info" id="qrInfo" type="button"><span class="ic">i</span><span id="qrInfoLbl">About this sport</span></button>
       <button class="qr-info qr-pdf" id="qrPdf" type="button" title="Download the current view as a PDF">⬇ PDF</button>
@@ -308,12 +332,12 @@ const DATA=__PAYLOAD__, ORDER=__ORDER__, PER=30;
 const LOGO=document.querySelector('.qr-head img').src;
 let cur=ORDER[0];
 const st={};
-ORDER.forEach(k=>{st[k]={cat:DATA[k].cats[0],year:'',q:'',sort:-1,dir:1,page:0};});
+ORDER.forEach(k=>{st[k]={cat:DATA[k].cats[0],year:'',qtr:'',q:'',sort:-1,dir:1,page:0};});
 const tabsEl=document.getElementById('qrTabs');
 ORDER.forEach(k=>{const b=document.createElement('button');b.className='qr-tab'+(k===cur?' active':'');b.textContent=DATA[k].label;b.onclick=()=>{cur=k;[...tabsEl.children].forEach(c=>c.classList.remove('active'));b.classList.add('active');
     if(qrRoot.classList.contains('spacious')&&!st[cur].year){st[cur].year=String(DATA[cur].years[0]);}
     syncControls();render();};tabsEl.appendChild(b);});
-const catSel=document.getElementById('qrCat'),yearSel=document.getElementById('qrYear'),searchEl=document.getElementById('qrSearch');
+const catSel=document.getElementById('qrCat'),yearSel=document.getElementById('qrYear'),qtrSel=document.getElementById('qrQtr'),searchEl=document.getElementById('qrSearch');
 const panelEl=document.getElementById('qrPanel'),missEl=document.getElementById('qrMiss'),infoBtn=document.getElementById('qrInfo');
 function buildPanel(){const d=DATA[cur],e=d.explainer;
   const tl=e.notes.map(n=>`<li><span class="yr">${n[0]}</span><span>${n[1]}</span></li>`).join('');
@@ -327,9 +351,18 @@ function buildPanel(){const d=DATA[cur],e=d.explainer;
   if(ownMiss.length)badge.push('Owners not available for '+ownMiss.join(', ')+' (dog/rank/score shown).');
   if(badge.length){missEl.textContent='⚠ '+badge.join('  ·  ');missEl.classList.add('show');}
   else missEl.classList.remove('show');}
+const QLBL={Q1:'Q1 · Jan–Mar',Q2:'Q2 · Jan–Jun',Q3:'Q3 · Jan–Sep',Q4:'Q4 · full year'},QORDJS={Q4:4,Q3:3,Q2:2,Q1:1};
+function allRows(d){return d.kind==='sections'?d.cats.flatMap(c=>(d.views[c]||{rows:[]}).rows):d.rows;}
+function quartersFor(d,year){const seen=new Set();
+  allRows(d).forEach(r=>{if(!year||String(r[0])===String(year))seen.add(r[1]);});
+  return [...seen].sort((a,b)=>(QORDJS[b]||0)-(QORDJS[a]||0));}
 function syncControls(){const d=DATA[cur],s=st[cur];
   catSel.innerHTML=d.cats.map(c=>`<option${c===s.cat?' selected':''}>${c}</option>`).join('');
   yearSel.innerHTML='<option value="">All years</option>'+d.years.map(y=>`<option value="${y}"${String(y)===s.year?' selected':''}>${y}</option>`).join('');
+  const qs=quartersFor(d,s.year);
+  if(s.qtr&&qs.indexOf(s.qtr)<0)s.qtr='';
+  qtrSel.innerHTML='<option value="">All quarters</option>'+qs.map(q=>`<option value="${q}"${q===s.qtr?' selected':''}>${QLBL[q]||q}</option>`).join('');
+  qtrSel.disabled=qs.length<2;
   searchEl.value=s.q;
   panelEl.classList.remove('open');buildPanel();}
 infoBtn.onclick=()=>panelEl.classList.toggle('open');
@@ -424,14 +457,28 @@ function viewFor(){const d=DATA[cur],s=st[cur];
   return{headers:d.headers,numeric:d.numeric,rows};}
 function filtered(v){const s=st[cur];let rows=v.rows;
   if(s.year)rows=rows.filter(r=>String(r[0])===s.year);
+  if(s.qtr)rows=rows.filter(r=>String(r[1])===s.qtr);
   if(s.q){const q=s.q.toLowerCase();rows=rows.filter(r=>r.some(c=>String(c).toLowerCase().includes(q)));}
-  if(s.sort>=0){const sc=s.sort,nu=v.numeric[sc];rows=rows.slice().sort((a,b)=>{let x=a[sc],y=b[sc];if(nu){const nx=parseFloat(String(x).replace(/[^\d.-]/g,'')),ny=parseFloat(String(y).replace(/[^\d.-]/g,''));if(!isNaN(nx)&&!isNaN(ny))return(nx-ny)*s.dir;if(isNaN(nx))return 1;if(isNaN(ny))return -1;}return String(x).localeCompare(String(y))*s.dir;});}
+  if(s.sort>=0){const sc=s.sort,nu=v.numeric[sc];
+    const clsIdx=v.headers.indexOf('Class'),rkIdx=v.headers.indexOf('Rank');
+    const rankOf=r=>parseInt(String(r[rkIdx]).replace(/\D/g,''),10)||0;
+    rows=rows.slice().sort((a,b)=>{let x=a[sc],y=b[sc];
+      if(nu){const nx=parseFloat(String(x).replace(/[^\d.-]/g,'')),ny=parseFloat(String(y).replace(/[^\d.-]/g,''));
+        if(!isNaN(nx)&&!isNaN(ny)){if(nx!==ny)return(nx-ny)*s.dir;}
+        else{if(isNaN(nx))return 1;if(isNaN(ny))return -1;}}
+      else{const c=String(x).localeCompare(String(y));if(c)return c*s.dir;}
+      // Sorting by Class keeps each class whole and in rank order, newest first.
+      if(sc===clsIdx){const yr=parseInt(b[0],10)-parseInt(a[0],10);if(yr)return yr;
+        const q=(QORDJS[b[1]]||0)-(QORDJS[a[1]]||0);if(q)return q;
+        if(rkIdx>=0)return rankOf(a)-rankOf(b);}
+      return 0;});}
   return rows;}
 function viewForCat(cat){const d=DATA[cur];
   if(d.kind==='sections'){const v=d.views[cat];return v?{headers:v.headers,numeric:v.numeric,rows:v.rows}:null;}
   return {headers:d.headers,numeric:d.numeric,rows:d.rows.filter(r=>r[d.catCol]===cat)};}
 function applyYQ(rows){const s=st[cur];
   if(s.year)rows=rows.filter(r=>String(r[0])===s.year);
+  if(s.qtr)rows=rows.filter(r=>String(r[1])===s.qtr);
   if(s.q){const q=s.q.toLowerCase();rows=rows.filter(r=>r.some(c=>String(c).toLowerCase().includes(q)));}
   return rows;}
 function renderGrouped(){const d=DATA[cur],s=st[cur],rep=document.getElementById('qrReport');rep.innerHTML='';
@@ -440,7 +487,8 @@ function renderGrouped(){const d=DATA[cur],s=st[cur],rep=document.getElementById
   const clsIdx=d.kind==='classes'?d.catCol:-1;let total=0;
   cats.forEach(cat=>{const v=viewForCat(cat);if(!v)return;const rows=applyYQ(v.rows.slice());if(!rows.length)return;total+=rows.length;
     const nameIdx=v.headers.findIndex(h=>h==='Dog'||h==='Bitch'),ownIdx=v.headers.indexOf('Owner'),totIdx=Math.max(v.headers.lastIndexOf('Total'),v.headers.indexOf('Score'),v.headers.indexOf('Avg Score'));
-    const show=v.headers.map((_,i)=>i).filter(i=>i!==clsIdx);
+    const drop=new Set([clsIdx]);if(s.year)drop.add(0);if(s.qtr)drop.add(1);
+    const show=v.headers.map((_,i)=>i).filter(i=>!drop.has(i));
     const h=document.createElement('div');h.className='qr-cathead';h.textContent=cat;rep.appendChild(h);
     const wrap=document.createElement('div');wrap.className='qr-tablewrap';
     const t=document.createElement('table');t.className='qr-tbl';
@@ -457,25 +505,55 @@ function render(){const spac=qrRoot.classList.contains('spacious');
   catSel.style.display='';  // keep the category/class filter visible in BOTH modes
   if(spac){renderGrouped();return;}
   const d=DATA[cur],s=st[cur],v=viewFor();
+  // A chosen year/quarter is already named in the dropdown, so repeating it on every
+  // row only pushes the scores off-screen — the reason the table would not fit an iPad.
+  const drop=new Set();if(s.year)drop.add(0);if(s.qtr)drop.add(1);
+  const cols=v.headers.map((_,i)=>i).filter(i=>!drop.has(i));
   const head=document.getElementById('qrHead');head.innerHTML='';const tr=document.createElement('tr');
-  v.headers.forEach((h,i)=>{const th=document.createElement('th');th.innerHTML=h+(s.sort===i?(' <span class="ar">'+(s.dir>0?'▲':'▼')+'</span>'):'');th.onclick=()=>{if(s.sort===i)s.dir=-s.dir;else{s.sort=i;s.dir=1;}s.page=0;render();};tr.appendChild(th);});head.appendChild(tr);
+  cols.forEach(i=>{const h=v.headers[i];const th=document.createElement('th');th.innerHTML=h+(s.sort===i?(' <span class="ar">'+(s.dir>0?'▲':'▼')+'</span>'):'');th.onclick=()=>{if(s.sort===i)s.dir=-s.dir;else{s.sort=i;s.dir=1;}s.page=0;render();};tr.appendChild(th);});head.appendChild(tr);
   const rows=filtered(v);const pages=Math.max(1,Math.ceil(rows.length/PER));if(s.page>=pages)s.page=pages-1;if(s.page<0)s.page=0;const slice=rows.slice(s.page*PER,s.page*PER+PER);
   const nameIdx=v.headers.findIndex(h=>h==='Dog'||h==='Bitch'),ownIdx=v.headers.indexOf('Owner'),clsIdx=v.headers.indexOf('Class'),totIdx=Math.max(v.headers.lastIndexOf('Total'),v.headers.indexOf('Score'),v.headers.indexOf('Avg Score'));
   const body=document.getElementById('qrBody');body.innerHTML='';
-  if(!rows.length){body.innerHTML=`<tr><td class="empty" colspan="${v.headers.length}">No rows match — try “All classes”, “All years”, or clear the search.</td></tr>`;}
-  slice.forEach(r=>{const trr=document.createElement('tr');r.forEach((c,i)=>{const td=document.createElement('td');td.textContent=c;if(i===nameIdx)td.className='name';else if(i===ownIdx)td.className='owner';else if(i===clsIdx)td.className='cls';else if(i===totIdx)td.className='tot';trr.appendChild(td);});body.appendChild(trr);});
+  if(!rows.length){body.innerHTML=`<tr><td class="empty" colspan="${cols.length}">No rows match — try “All classes”, “All years”, “All quarters”, or clear the search.</td></tr>`;}
+  slice.forEach(r=>{const trr=document.createElement('tr');cols.forEach(i=>{const td=document.createElement('td');td.textContent=r[i];if(i===nameIdx)td.className='name';else if(i===ownIdx)td.className='owner';else if(i===clsIdx)td.className='cls';else if(i===totIdx)td.className='tot';trr.appendChild(td);});body.appendChild(trr);});
   document.getElementById('qrCount').textContent=rows.length.toLocaleString()+' row'+(rows.length===1?'':'s');
   document.getElementById('qrPage').textContent='Page '+(s.page+1)+' / '+pages;
   document.getElementById('qrPrev').disabled=s.page<=0;document.getElementById('qrNext').disabled=s.page>=pages-1;updateHints();}
 function updateHints(){const w=document.getElementById('qrWrap'),box=w.parentElement;box.classList.toggle('can-r',w.scrollWidth-w.clientWidth-w.scrollLeft>4);}
 catSel.addEventListener('change',e=>{st[cur].cat=e.target.value;st[cur].page=0;st[cur].sort=-1;render();});
-yearSel.addEventListener('change',e=>{st[cur].year=e.target.value;st[cur].page=0;render();});
+yearSel.addEventListener('change',e=>{st[cur].year=e.target.value;st[cur].page=0;syncQuarterOptions();render();});
+qtrSel.addEventListener('change',e=>{st[cur].qtr=e.target.value;st[cur].page=0;render();});
+function syncQuarterOptions(){const d=DATA[cur],s=st[cur],qs=quartersFor(d,s.year);
+  if(s.qtr&&qs.indexOf(s.qtr)<0)s.qtr='';
+  qtrSel.innerHTML='<option value="">All quarters</option>'+qs.map(q=>`<option value="${q}"${q===s.qtr?' selected':''}>${QLBL[q]||q}</option>`).join('');
+  qtrSel.disabled=qs.length<2;}
 searchEl.addEventListener('input',e=>{st[cur].q=e.target.value;st[cur].page=0;render();});
 document.getElementById('qrPrev').onclick=()=>{st[cur].page--;render();};
 document.getElementById('qrNext').onclick=()=>{st[cur].page++;render();};
 document.getElementById('qrWrap').addEventListener('scroll',updateHints,{passive:true});
 window.addEventListener('resize',updateHints);
-syncControls();render();
+// ---- deep links: #agility, #rally, #obedience, #breed  (optionally #agility/Excellent B)
+const HASHMAP={};
+ORDER.forEach(k=>{HASHMAP[k]=k;HASHMAP[DATA[k].label.toLowerCase().replace(/[^a-z]/g,'')]=k;});
+Object.assign(HASHMAP,{breed:'breedgroup',group:'breedgroup',conformation:'breedgroup',breedgroup:'breedgroup',
+  breed_group:'breedgroup','breed-group':'breedgroup',obed:'obedience',ag:'agility'});
+function selectTab(k){if(!DATA[k])return false;cur=k;
+  [...tabsEl.children].forEach((c,i)=>c.classList.toggle('active',ORDER[i]===k));
+  if(qrRoot.classList.contains('spacious')&&!st[cur].year){st[cur].year=String(DATA[cur].years[0]);}
+  syncControls();render();return true;}
+function applyHash(){const raw=decodeURIComponent((location.hash||'').replace(/^#/,''));
+  if(!raw)return false;
+  const parts=raw.split('/'),key=parts[0].trim().toLowerCase().replace(/[^a-z_-]/g,'');
+  const k=HASHMAP[key]||HASHMAP[key.replace(/[_-]/g,'')];
+  if(!k)return false;
+  const s=st[k];
+  if(parts[1]){const want=parts[1].trim().toLowerCase();
+    const hit=DATA[k].cats.find(c=>c.toLowerCase()===want);if(hit)s.cat=hit;}
+  if(parts[2]&&/^\d{4}$/.test(parts[2].trim()))s.year=parts[2].trim();
+  if(parts[3]&&/^q[1-4]$/i.test(parts[3].trim()))s.qtr=parts[3].trim().toUpperCase();
+  return selectTab(k);}
+window.addEventListener('hashchange',applyHash);
+syncControls();render();applyHash();
 </script>
 </body></html>'''
 

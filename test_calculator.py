@@ -4,13 +4,12 @@ compare every computed category against the Q2-audit's validated outputs
 (raw_akc/audit_2026Q2/computed/computed_sports.json), plus the specific
 new-feature targets from comparison_Q2_2026.md.
 
-Rally baselines follow Polly Mumma's rules (2026-09-14): qualifying legs =
-{QLFY,1,2,3,4} + {S1,S2,S3}; High Combined/High Triple = average of the best
-THREE per-day combined scores (dual-trial days pair k-th best with k-th best).
-Validated 86/90 exact vs the finished Q2 card; the four remaining diffs are
-documented card-side questions (comparison_Q2_2026.md) and OUR values are
-pinned below. Obedience stays QUAL-only — its card is consistent without
-S-rows, pending Polly's confirmation."""
+Baselines follow the FINAL club rules (decided 2026-09-16): S lines — the same
+run recorded a second time in a concurrent specialty's judge's book — are NEVER
+counted, in rally exactly as in obedience (Polly adopted Betsy's reading); ties
+are listed alphabetically by registered name and share a rank; Combined Open
+B/Utility requires a minimum of five combined trials. Rally values = the
+corrected Q2 card (cross-validated vs an independent Python recompute)."""
 import json, sys
 from playwright.sync_api import sync_playwright
 
@@ -39,7 +38,7 @@ with sync_playwright() as p:
 
 # --- new-feature targets (comparison_Q2_2026.md) ---
 comb = data["Obedience"].get("Combined Open B/Utility", [])
-check("Obedience Combined lists exactly Polesitter at 397.80 (>=3-trial gate)",
+check("Obedience Combined lists exactly Polesitter at 397.80 (min 5 combined trials — Betsy 9/16; he has 15, Brownwell's 1 excluded)",
       len(comb) == 1 and comb[0]["score"] == "397.80" and "Polesitter" in comb[0]["dog"],
       json.dumps(comb)[:200])
 pnov = data["Obedience"].get("Preferred Novice", [])
@@ -52,22 +51,27 @@ check("Rally Choice = 98.00/96.00/84.00 (Ledgend/Silver Oak/Prairie Rose)",
       and "Ledgend" in cho[0]["dog"] and "Silver Oak" in cho[1]["dog"] and "Prairie Rose" in cho[2]["dog"],
       json.dumps(cho)[:300])
 
-# --- Polly's-rule spot checks (comparison_Q2_2026.md, confirmed 2026-09-14) ---
+# --- spot checks under the final 9/16 rules (one run, one score) ---
 def dog(cat, sub):
     return next((r for r in data["Rally"].get(cat, []) if sub in r["dog"]), None)
 
 r = dog("Intermediate", "Thor-Adore")
-check("Rally Thor-Adore Intermediate best-3 = 79.67 (legs 71+84+84; card's 89.67 is a digit slip)",
-      r is not None and r["score"] == "79.67", json.dumps(r))
+check("Rally Thor-Adore NOT listed in Intermediate (2 real runs under the final rule)",
+      r is None, json.dumps(r))
 r = dog("Advanced B", "Crackl'N Fire")
-check("Rally Patriot Northwood Crackl'n Fire Advanced B = 94.00 on 4 legs (S3 rows count)",
-      r is not None and r["score"] == "94.00" and r["legs"] == 4, json.dumps(r))
+check("Rally Crackl'n Fire NOT listed in Advanced B (his S-line copies are not scores; 2 real runs)",
+      r is None, json.dumps(r))
 r = dog("Novice A", "Duck Duck Goose")
-check("Rally Segre's Duck Duck Goose Novice A = 95.00", r is not None and r["score"] == "95.00",
-      json.dumps(r))
+check("Rally Segre's Duck Duck Goose Novice A = 89.67 (98+89+82; the S-line 98 not double-counted)",
+      r is not None and r["score"] == "89.67", json.dumps(r))
 r = dog("Novice B", "Cerise Valor")
-check("Rally Cerise Valor Novice B = 98.67", r is not None and r["score"] == "98.67",
+check("Rally Cerise Valor Novice B = 95.67 (99+98+90 real runs)", r is not None and r["score"] == "95.67",
       json.dumps(r))
+advb = data["Rally"].get("Advanced B", [])
+check("Advanced B tie order = Betsy Ross / Jimmy / Polesitter, all 100.00 (alpha by registered name)",
+      len(advb) >= 3 and [r["score"] for r in advb[:3]] == ["100.00"] * 3
+      and "Betsy Ross" in advb[0]["dog"] and "Yellowstone" in advb[1]["dog"] and "Polesitter" in advb[2]["dog"],
+      json.dumps([r["dog"][:40] for r in advb[:3]]))
 r = dog("High Combined", "Ledgend")
 check("Rally Balmor's Ledgend High Combined = 195.33 (card's 196.33 is a documented card-side question)",
       r is not None and r["score"] == "195.33", json.dumps(r))

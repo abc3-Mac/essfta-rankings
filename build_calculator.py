@@ -126,14 +126,15 @@ table.ec-tbl tr:nth-child(even) td{background:#FBF7EE;}
    <summary>How these rankings are calculated</summary>
    <div class="mb">
     <p><b>Obedience &amp; Rally</b> — per class, a dog must have at least <b>3 qualifying legs</b> (enough to earn the title); it's then ranked by the <b>average of its 3 highest scores</b> in that class. Classes keep A and B separate. Placements are shown but don't add points.</p>
-    <p><b>Rally qualifying scores</b>: in rally, the special-placement rows <code>S1/S2/S3</code> (the second trial of a dual-trial day) <b>count as additional qualifying scores</b> — club rule per Polly Mumma, Sept 2026. Award rows (<code>HTQ/HIGHCM/HCS/HTQS</code>) never count: their score fields are combined totals, not run scores. Obedience does <b>not</b> count S-rows.</p>
+    <p><b>The specialty S lines</b>: rows whose placement is <code>S1/S2/S3</code> are the <b>same run recorded a second time</b> in a concurrent breed-specialty's judge's book (one run, two placements, one score). By club decision (Sept 2026) they are <b>never counted as scores</b> — in rally exactly as in obedience. Trophy rows (<code>HTQ/HIGHCM/HCS/HTQS</code> and similar) never count either.</p>
+    <p><b>Ties</b>: dogs with the same value are listed <b>alphabetically by registered name</b> (championship prefixes ignored) and share the same rank number; the next rank skips accordingly (1, 1, 1, 4 …).</p>
     <p><b>Rally — High Combined (Adv B + Exc B) &amp; High Triple (+ Master)</b>: per day (event + date), the dog's qualifying scores in each class are combined — on a dual-trial day with two scores per class, the best pairs with the best and the 2nd with the 2nd, giving two combined scores; ranked by the <b>average of the top 3 combined scores</b> (minimum 3 to list).</p>
-    <p><b>Obedience — Combined Open B/Utility</b>: per trial, the dog's best Open B score plus its best Utility (A or B) score; ranked by the <b>average of the top 5 trial totals</b> (minimum 3 trials to list). This is the club's published combined-award rule.</p>
+    <p><b>Obedience — Combined Open B/Utility</b>: per trial, the dog's best Open B score plus its best Utility (A or B) score; ranked by the <b>average of the top 5 trial totals</b> (minimum of 5 combined trials to list — Betsy Baird, Sept 2026). This is the club's published combined-award rule.</p>
     <p><b>Quarters:</b> AKC raw exports are per-quarter windows, not year-to-date — drop every quarter's file for the period you want (e.g. 1Q + 2Q for Jan–Jun); same-sport files are concatenated before computing.</p>
     <p><b>Agility — class awards</b> (Novice / Open / Excellent A): average of the dog's <b>3 best run scores</b>.</p>
     <p><b>Agility — ESS of the Year</b>: with at least <b>10 Double-Qs</b> in Excellent B, ranked by the average <b>speed (YPS)</b> of the <b>10 fastest QQs</b>. A QQ = qualifying in both Standard &amp; Jumpers the same day; each QQ's speed = the mean of those two runs (<code>YPS = course distance ÷ dog time</code>).</p>
     <p><b>Membership:</b> an owner marked <b>*</b> matched the ESSFTA membership directory. Matching is name-based and approximate in this demo — verify before relying on it.</p>
-    <p style="color:var(--muted)">These formulas reproduced the published Q1 2026 rankings to the decimal, and the Q2 2026 (Jan–Jun) rally card 86/90 exact — every remaining difference is a documented card-side question. Source = AKC Quarterly Companion-Events Report.</p>
+    <p style="color:var(--muted)">These formulas reproduced the published Q1 2026 rankings to the decimal, and the corrected Q2 2026 (Jan–Jun) cards in full. Source = AKC Quarterly Companion-Events Report.</p>
    </div>
   </details>
  </div>
@@ -143,11 +144,11 @@ table.ec-tbl tr:nth-child(even) td{background:#FBF7EE;}
 const MEMBERS=__MEMBERS__;
 // ---------- helpers ----------
 const QUAL=new Set(["QLFY","1","2","3","4"]);
-// Rally only (Polly Mumma, 2026-09-14): special-placement rows S1/S2/S3 — the second trial of a
-// dual-trial day — count as additional qualifying scores. Award rows (HTQ/HIGHCM/HCS/HTQS) stay
-// excluded: their Score fields are combined totals, not run scores. Obedience remains QUAL-only
-// (its card is internally consistent without S-rows; pending Polly's confirmation).
-const RQUAL=new Set(["QLFY","1","2","3","4","S1","S2","S3"]);
+// S1/S2/S3 lines are the SAME run recorded a second time in a concurrent breed-specialty's
+// judge's book (all-breed "Option 2" trials at springer clubs) — one run, one score, two
+// placements. Club decision 2026-09-16 (Polly Mumma, matching Betsy Baird's obedience
+// practice): S lines are NEVER counted as scores, in rally as in obedience. Trophy rows
+// (HTQ/HIGHCM/HCS/HTQS/HIGHT/HTS/HTP) are likewise never scores.
 const HON=new Set(["mr","mrs","ms","dr","miss","mr.","mrs.","ms.","dr."]);
 function clean(s){return String(s==null?"":s).replace(/ /g," ").trim();}
 function num(v){if(v==null)return null;const n=parseFloat(String(v).replace(/[^0-9.\-]/g,""));return isNaN(n)?null:n;}
@@ -159,7 +160,18 @@ function fl(s){const t=dropSuf(norm(s).split(" ").filter(Boolean));return t.leng
 const MSET=new Set();
 for(const m of MEMBERS){const add=x=>{const n=norm(x);if(n.split(" ").length>=2)MSET.add(n);const f=fl(x);if(f)MSET.add(f);};add(m.nam);String(m.xdn||"").split(/\band\b/i).forEach(add);}
 function isMember(name){const n=norm(name);if(MSET.has(n))return true;const f=fl(name);return f?MSET.has(f):false;}
-function lastName(o){const t=dropSuf(norm(o).split(" ").filter(Boolean));const l=t.length?t[t.length-1]:norm(o);return l.charAt(0).toUpperCase()+l.slice(1);}
+// Display surname: keeps apostrophes and mixed case (O'Connell, LoBello), drops generational and
+// degree suffixes (Jr, III, Ph.D.); all-caps or all-lowercase entries are title-cased.
+const NAMESUF=/^(jr|sr|ii|iii|iv|v|ph\.?d\.?|dvm|md|esq)[.,]*$/i;
+function lastName(o){const t=clean(o).split(/\s+/).filter(Boolean);while(t.length>1&&NAMESUF.test(t[t.length-1]))t.pop();let l=(t[t.length-1]||"").replace(/[.,]+$/,"");if(l===l.toUpperCase()||l===l.toLowerCase())l=l.toLowerCase().replace(/(^|[-'’])([a-z])/g,(m,a,b)=>a+b.toUpperCase());return l;}
+// Registered name = dog name minus leading championship-title tokens (CH, GCHB, MACH3, ...).
+// Ties are listed ALPHABETICALLY by registered name (club convention, Polly Mumma 2026-09-16).
+const PRETITLE=/^(CH|GCH[BSGP]?|MACH\d*|PACH\d*|PNACH\d*|OTCH\d*|RACH\d*|HRCH|CT|FC|AFC|NFC|DC)$/;
+function regName(d){const t=clean(d).split(/\s+/);let i=0;while(i<t.length&&PRETITLE.test(t[i]))i++;return t.slice(i).join(" ").toLowerCase()||clean(d).toLowerCase();}
+function byScoreThenName(a,b){return b.score-a.score||regName(a.dog).localeCompare(regName(b.dog));}
+// Competition ranking: tied dogs share the lowest rank; the next rank skips (1,1,1,4,...).
+// Ties are detected on tiekey (defaults to the displayed score).
+function ranks(rows){const out=[];let r=1;for(let i=0;i<rows.length;i++){const k=rows[i].tiekey!=null?rows[i].tiekey:rows[i].score;if(i>0){const pk=rows[i-1].tiekey!=null?rows[i-1].tiekey:rows[i-1].score;if(k!==pk)r=i+1;}out.push(r);}return out;}
 function ownersOf(row,sport){const list=[];if(sport==="Obedience")list.push(clean(row["Primary Owner"])+" "+clean(row["Last Name"]));else list.push(clean(row["Primary Owner Name"]||row["Primary Owner"]));["2nd Owner","3rd Owner","4th Owner"].forEach(c=>{if(clean(row[c]))list.push(clean(row[c]));});return list.map(clean).filter(Boolean);}
 function ownerCell(row,sport){return ownersOf(row,sport).map(o=>lastName(o)+(isMember(o)?"*":"")).join("/");}
 
@@ -171,17 +183,19 @@ function dateKey(v){if(v instanceof Date)return v.toISOString().slice(0,10);cons
 // ---------- formulas ----------
 const OBED={BNOVA:"Beginner Novice A",BNOVB:"Beginner Novice B",ONOVA:"Novice A",ONOVB:"Novice B",OOPENA:"Open A",OOPENB:"Open B",OUTILA:"Utility A",OUTILB:"Utility B",GRADNOVR:"Graduate Novice",GRADOPNR:"Graduate Open",PNOV:"Preferred Novice",POPEN:"Preferred Open",PUTIL:"Preferred Utility"};
 const RALLY={RNOVA:"Novice A",RNOVB:"Novice B",RADVA:"Advanced A",RADVB:"Advanced B",REXCA:"Excellent A",REXCB:"Excellent B",RINT:"Intermediate",RMAST:"Master",RCHO:"Choice"};
-const ORDER={Obedience:["Beginner Novice A","Beginner Novice B","Novice A","Novice B","Open A","Open B","Utility A","Utility B","Graduate Novice","Graduate Open","Preferred Novice","Preferred Open","Preferred Utility","Combined Open B/Utility"],
- Rally:["Novice A","Novice B","Advanced A","Advanced B","Excellent A","Excellent B","Intermediate","Master","Choice","High Combined","High Triple"],
+// Card order = regular titling classes first, then alternative/optional (Polly Mumma 9/16:
+// "Intermediate is an Optional Titling Class. Master is a regular titling class.";
+// obedience follows Betsy Baird's scorecard layout).
+const ORDER={Obedience:["Novice A","Novice B","Open A","Open B","Utility A","Utility B","Combined Open B/Utility","Preferred Novice","Preferred Open","Preferred Utility","Beginner Novice A","Beginner Novice B","Graduate Novice","Graduate Open"],
+ Rally:["Novice A","Novice B","Advanced A","Advanced B","Excellent A","Excellent B","Master","Intermediate","Choice","High Combined","High Triple"],
  Agility:["ESS of the Year","Novice","Open","Excellent A","Preferred ESS of the Year"]};
 
-function best3Classes(data,sport,classMap,qual){
- qual=qual||QUAL;
+function best3Classes(data,sport,classMap){
  const g={};
- for(const r of data){const cls=clean(r["Primary Class"]);if(!(cls in classMap))continue;if(!qual.has(clean(r["Placement"])))continue;const s=num(r["Score"]);if(s==null)continue;const k=clean(r["Reg Number"])+"|"+cls;(g[k]=g[k]||{cls,scores:[],row:r}).scores.push(s);g[k].row=r;}
+ for(const r of data){const cls=clean(r["Primary Class"]);if(!(cls in classMap))continue;if(!QUAL.has(clean(r["Placement"])))continue;const s=num(r["Score"]);if(s==null)continue;const k=clean(r["Reg Number"])+"|"+cls;(g[k]=g[k]||{cls,scores:[],row:r}).scores.push(s);g[k].row=r;}
  const byCat={};
  for(const k in g){const e=g[k];if(e.scores.length<3)continue;const b=e.scores.slice().sort((a,b)=>b-a).slice(0,3);const avg=Math.round(b.reduce((a,b)=>a+b,0)/3*100)/100;const cat=classMap[e.cls];(byCat[cat]=byCat[cat]||[]).push({dog:clean(e.row["Dog Name"]),owner:ownerCell(e.row,sport),score:avg.toFixed(2),legs:e.scores.length});}
- for(const c in byCat)byCat[c].sort((a,b)=>b.score-a.score);
+ for(const c in byCat)byCat[c].sort(byScoreThenName);
  return byCat;
 }
 function yoy(data,sport,stdC,jwwC){
@@ -189,7 +203,7 @@ function yoy(data,sport,stdC,jwwC){
  for(const r of data){const cls=clean(r["Primary Class"]);if(cls!==stdC&&cls!==jwwC)continue;if(!QUAL.has(clean(r["Placement"])))continue;const dist=num(r["Course Distance"]),dt=num(r["Dog Time"]);if(dist==null||!dt)continue;const reg=clean(r["Reg Number"]);const dk=dateKey(r["Event Date"]);const d=(dogs[reg]=dogs[reg]||{row:r,dates:{}});const slot=(d.dates[dk]=d.dates[dk]||{});if(cls===stdC){if(slot.std==null)slot.std=dist/dt;}else{if(slot.jww==null)slot.jww=dist/dt;}}
  const out=[];
  for(const reg in dogs){const d=dogs[reg];const qq=[];for(const dk in d.dates){const s=d.dates[dk];if(s.std!=null&&s.jww!=null)qq.push((s.std+s.jww)/2);}if(qq.length<10)continue;qq.sort((a,b)=>b-a);const avg=Math.round(qq.slice(0,10).reduce((a,b)=>a+b,0)/10*100)/100;out.push({dog:clean(d.row["Dog Name"]),owner:ownerCell(d.row,sport),score:avg.toFixed(2),legs:qq.length});}
- out.sort((a,b)=>b.score-a.score);return out;
+ out.sort(byScoreThenName);return out;
 }
 function combinedCat(data,sport,classes){
  // per dog, per trial (event+date): sum of the best score in each COMPONENT; a component is one
@@ -200,22 +214,22 @@ function combinedCat(data,sport,classes){
  const dogs={};
  for(const r of data){const cls=clean(r["Primary Class"]);if(!(cls in gOf))continue;if(!QUAL.has(clean(r["Placement"])))continue;const s=num(r["Score"]);if(s==null)continue;const reg=clean(r["Reg Number"]);const tr=clean(r["Event Name"])+"|"+dateKey(r["Event Date"]);const d=(dogs[reg]=dogs[reg]||{row:r,trials:{}});const t=(d.trials[tr]=d.trials[tr]||{});const gi=gOf[cls];if(t[gi]==null||s>t[gi])t[gi]=s;}
  const out=[];
- for(const reg in dogs){const d=dogs[reg];const sums=[];for(const tr in d.trials){const t=d.trials[tr];if(groups.every((g,i)=>t[i]!=null))sums.push(groups.reduce((a,g,i)=>a+t[i],0));}if(sums.length<3)continue;sums.sort((a,b)=>b-a);const top=sums.slice(0,5);const avg=Math.round(top.reduce((a,b)=>a+b,0)/top.length*100)/100;out.push({dog:clean(d.row["Dog Name"]),owner:ownerCell(d.row,sport),score:avg.toFixed(2),legs:sums.length});}
- out.sort((a,b)=>b.score-a.score);return out;
+ for(const reg in dogs){const d=dogs[reg];const sums=[];for(const tr in d.trials){const t=d.trials[tr];if(groups.every((g,i)=>t[i]!=null))sums.push(groups.reduce((a,g,i)=>a+t[i],0));}if(sums.length<5)continue;sums.sort((a,b)=>b-a);const top=sums.slice(0,5);const avg=Math.round(top.reduce((a,b)=>a+b,0)/top.length*100)/100;out.push({dog:clean(d.row["Dog Name"]),owner:ownerCell(d.row,sport),score:avg.toFixed(2),legs:sums.length});}
+ out.sort(byScoreThenName);return out;
 }
 // Rally High Combined / High Triple (rule confirmed vs the Q2-2026 card, 9/10 exact each):
-// per dog per DAY (Event Name + Event Date), collect that day's qualifying scores (RQUAL) in each
+// per dog per DAY (Event Name + Event Date), collect that day's qualifying scores in each
 // component class; a dual-trial day with k scores per class yields k combined sums, pairing the
 // k-th best with the k-th best. Award = average of the TOP 3 sums; at least 3 sums to list.
 function rallyCombined(data,sport,classes){
  const dogs={};
- for(const r of data){const cls=clean(r["Primary Class"]);if(!classes.includes(cls))continue;if(!RQUAL.has(clean(r["Placement"])))continue;const s=num(r["Score"]);if(s==null)continue;const reg=clean(r["Reg Number"]);const dk=clean(r["Event Name"])+"|"+dateKey(r["Event Date"]);const d=(dogs[reg]=dogs[reg]||{row:r,days:{}});d.row=r;const day=(d.days[dk]=d.days[dk]||{});(day[cls]=day[cls]||[]).push(s);}
+ for(const r of data){const cls=clean(r["Primary Class"]);if(!classes.includes(cls))continue;if(!QUAL.has(clean(r["Placement"])))continue;const s=num(r["Score"]);if(s==null)continue;const reg=clean(r["Reg Number"]);const dk=clean(r["Event Name"])+"|"+dateKey(r["Event Date"]);const d=(dogs[reg]=dogs[reg]||{row:r,days:{}});d.row=r;const day=(d.days[dk]=d.days[dk]||{});(day[cls]=day[cls]||[]).push(s);}
  const out=[];
  for(const reg in dogs){const d=dogs[reg];const sums=[];
    for(const dk in d.days){const day=d.days[dk];if(!classes.every(c=>day[c]))continue;const lists=classes.map(c=>day[c].slice().sort((a,b)=>b-a));const k=Math.min(...lists.map(l=>l.length));for(let i=0;i<k;i++)sums.push(lists.reduce((a,l)=>a+l[i],0));}
    if(sums.length<3)continue;sums.sort((a,b)=>b-a);const avg=Math.round(sums.slice(0,3).reduce((a,b)=>a+b,0)/3*100)/100;
    out.push({dog:clean(d.row["Dog Name"]),owner:ownerCell(d.row,sport),score:avg.toFixed(2),legs:sums.length});}
- out.sort((a,b)=>b.score-a.score);return out;
+ out.sort(byScoreThenName);return out;
 }
 // Agility Novice/Open: average of FIRST 3 STD + FIRST 3 JWW qualifying runs (the title legs)
 function agFirstSix(data,sport,stdC,jwwC){
@@ -223,19 +237,19 @@ function agFirstSix(data,sport,stdC,jwwC){
  for(const r of data){const cls=clean(r["Primary Class"]);const isS=stdC.includes(cls),isJ=jwwC.includes(cls);if(!isS&&!isJ)continue;if(!QUAL.has(clean(r["Placement"])))continue;const s=num(r["Score"]);if(s==null)continue;const reg=clean(r["Reg Number"]);const d=(dogs[reg]=dogs[reg]||{row:r,std:[],jww:[]});(isS?d.std:d.jww).push({s,dt:dateKey(r["Event Date"])});}
  const out=[];const f=a=>a.sort((x,y)=>x.dt<y.dt?-1:1).slice(0,3).map(x=>x.s);
  for(const reg in dogs){const d=dogs[reg];if(d.std.length<3||d.jww.length<3)continue;const six=f(d.std).concat(f(d.jww));const avg=Math.round(six.reduce((a,b)=>a+b,0)/6*100)/100;out.push({dog:clean(d.row["Dog Name"]),owner:ownerCell(d.row,sport),score:avg.toFixed(2),legs:6});}
- out.sort((a,b)=>b.score-a.score);return out;
+ out.sort(byScoreThenName);return out;
 }
 // Agility Preferred: total count of all Preferred Standard+JWW qualifying runs; ties by avg YPS
 function agPreferredTotal(data,sport){
  const dogs={};
  for(const r of data){const cls=clean(r["Primary Class"]);if(!/^(AG|JWW).*P$/.test(cls))continue;if(!QUAL.has(clean(r["Placement"])))continue;const reg=clean(r["Reg Number"]);const dist=num(r["Course Distance"]),dt=num(r["Dog Time"]);const d=(dogs[reg]=dogs[reg]||{row:r,n:0,yps:[]});d.n++;if(dist!=null&&dt)d.yps.push(dist/dt);}
  const out=[];
- for(const reg in dogs){const d=dogs[reg];const ay=d.yps.length?d.yps.reduce((a,b)=>a+b,0)/d.yps.length:0;out.push({dog:clean(d.row["Dog Name"]),owner:ownerCell(d.row,sport),score:String(d.n),yps:Math.round(ay*100)/100,legs:d.n});}
- out.sort((a,b)=>b.legs-a.legs||b.yps-a.yps);return out;
+ for(const reg in dogs){const d=dogs[reg];const ay=d.yps.length?d.yps.reduce((a,b)=>a+b,0)/d.yps.length:0;out.push({dog:clean(d.row["Dog Name"]),owner:ownerCell(d.row,sport),score:String(d.n),yps:Math.round(ay*100)/100,legs:d.n,tiekey:d.n+"|"+(Math.round(ay*100)/100)});}
+ out.sort((a,b)=>b.legs-a.legs||b.yps-a.yps||regName(a.dog).localeCompare(regName(b.dog)));return out;
 }
 function compute(sport,data){
  if(sport==="Obedience"){const r=best3Classes(data,sport,OBED);r["Combined Open B/Utility"]=combinedCat(data,sport,["OOPENB",["OUTILA","OUTILB"]]);return r;}
- if(sport==="Rally"){const r=best3Classes(data,sport,RALLY,RQUAL);r["High Combined"]=rallyCombined(data,sport,["RADVB","REXCB"]);r["High Triple"]=rallyCombined(data,sport,["RADVB","REXCB","RMAST"]);return r;}
+ if(sport==="Rally"){const r=best3Classes(data,sport,RALLY);r["High Combined"]=rallyCombined(data,sport,["RADVB","REXCB"]);r["High Triple"]=rallyCombined(data,sport,["RADVB","REXCB","RMAST"]);return r;}
  // Agility — per the official annual-awards criteria
  const cats={};
  cats["ESS of the Year"]=yoy(data,sport,"AGEXCB","JWWEXCB");                 // >=10 QQs, avg YPS fastest 10
@@ -264,14 +278,14 @@ function render(){
    else if(cat==="ESS of the Year"){suffix="  (avg YPS, fastest 10 QQs · min 10 QQs)";metric="Avg YPS";}
    else if(isAg&&(cat==="Novice"||cat==="Open")){suffix="  (avg of first 6: 3 Standard + 3 Jumpers)";}
    else if(isAg&&cat==="Excellent A"){suffix="  (highest average score)";}
-   else if(cat==="Combined Open B/Utility"){suffix="  (best Open B + best Utility per trial · avg of top 5 trial totals · min 3 trials)";}
+   else if(cat==="Combined Open B/Utility"){suffix="  (best Open B + best Utility per trial · avg of top 5 trial totals · min 5 trials)";}
    else if(combo){suffix="  (combined day scores across classes · avg of top 3 · min 3 combined days)";}
    const h=document.createElement("div");h.className="ec-cat";h.innerHTML=esc(cat)+"<span style='font-weight:400;font-size:12.5px;color:var(--muted)'>"+esc(suffix)+"</span>";rep.appendChild(h);
    if(!rows.length){const e=document.createElement("div");e.className="ec-empty";e.textContent="No qualifiers (no dog meets the required legs/QQs).";rep.appendChild(e);continue;}
    any=true;
    const t=document.createElement("table");t.className="ec-tbl";
    t.innerHTML="<tr><th>Rank</th><th>Dog</th><th>Owner(s)</th><th style='text-align:right'>"+metric+"</th></tr>";
-   rows.forEach((r,i)=>{const tr=document.createElement("tr");tr.innerHTML=`<td class='rank'>${i+1}</td><td class='dog'>${esc(r.dog)}</td><td>${esc(r.owner)}</td><td class='sc'>${r.score}</td>`;t.appendChild(tr);});
+   const rk=ranks(rows);rows.forEach((r,i)=>{const tr=document.createElement("tr");tr.innerHTML=`<td class='rank'>${rk[i]}</td><td class='dog'>${esc(r.dog)}</td><td>${esc(r.owner)}</td><td class='sc'>${r.score}</td>`;t.appendChild(tr);});
    rep.appendChild(t);
  }
  const note=document.createElement("div");note.className="ec-note";note.textContent="* = owner matched the ESSFTA membership directory (approximate). "+META[cur].file;rep.appendChild(note);
@@ -339,7 +353,7 @@ document.getElementById("ecDocx").onclick=()=>{
    kids.push(PAR(cat,{h:D.HeadingLevel.HEADING_2,sp:{before:200,after:80}}));
    if(!rows.length){kids.push(PAR("No qualifiers.",{ital:true,color:"888888"}));continue;}
    const head=new D.TableRow({tableHeader:true,children:[cell("Rank",{bold:true,w:W[0]}),cell("Dog",{bold:true,w:W[1]}),cell("Owner(s)",{bold:true,w:W[2]}),cell(metric,{bold:true,right:true,w:W[3]})]});
-   const body=rows.map((r,i)=>new D.TableRow({children:[cell(i+1,{w:W[0]}),cell(r.dog,{w:W[1],color:"8A2D33"}),cell(r.owner,{w:W[2]}),cell(r.score,{right:true,bold:true,w:W[3]})]}));
+   const rkx=ranks(rows);const body=rows.map((r,i)=>new D.TableRow({children:[cell(rkx[i],{w:W[0]}),cell(r.dog,{w:W[1],color:"8A2D33"}),cell(r.owner,{w:W[2]}),cell(r.score,{right:true,bold:true,w:W[3]})]}));
    kids.push(new D.Table({width:{size:100,type:D.WidthType.PERCENTAGE},rows:[head,...body]}));
  }
  kids.push(PAR("* = owner matched the ESSFTA membership directory (approximate). Source: AKC Quarterly Companion-Events Report.",{ital:true,color:"999999",size:16,sp:{before:160}}));
@@ -372,7 +386,7 @@ document.getElementById("ecPdf").onclick=()=>{
    else if(cat==="ESS of the Year"){suffix=" (avg YPS, fastest 10 QQs · min 10 QQs)";metric="Avg YPS";}
    else if(isAg&&(cat==="Novice"||cat==="Open")){suffix=" (avg of first 6: 3 Standard + 3 Jumpers)";}
    else if(isAg&&cat==="Excellent A"){suffix=" (highest average score)";}
-   else if(cat==="Combined Open B/Utility"){suffix=" (best Open B + best Utility per trial · top-5 avg · min 3 trials)";}
+   else if(cat==="Combined Open B/Utility"){suffix=" (best Open B + best Utility per trial · top-5 avg · min 5 trials)";}
    else if(combo){suffix=" (combined day scores · avg of top 3)";}
    if(y>pageH-90){doc.addPage();y=M;}
    doc.setFont("times","bold");doc.setTextColor(MAROON[0],MAROON[1],MAROON[2]);doc.setFontSize(12);
@@ -382,7 +396,7 @@ document.getElementById("ecPdf").onclick=()=>{
    if(!rows.length){doc.setFont(font,"italic");doc.setTextColor(MUTED[0],MUTED[1],MUTED[2]);doc.setFontSize(9);doc.text("No qualifiers (no dog meets the required legs/QQs).",M,y+6);y+=20;continue;}
    doc.autoTable({startY:y,margin:{left:M,right:M,top:M},theme:"striped",
      head:[["Rank","Dog","Owner(s)",metric]],
-     body:rows.map((r,i)=>[String(i+1),String(r.dog),String(r.owner),String(r.score)]),
+     body:(()=>{const rk2=ranks(rows);return rows.map((r,i)=>[String(rk2[i]),String(r.dog),String(r.owner),String(r.score)]);})(),
      styles:{font:font,fontSize:9,cellPadding:4,textColor:INK,overflow:"linebreak"},
      headStyles:{font:font,fontStyle:"bold",fillColor:PAPER,textColor:MAROON,fontSize:8.5},
      alternateRowStyles:{fillColor:SHADE},
