@@ -168,7 +168,7 @@ EXPLAINERS = {
             ("2011", "Time 2 Beat (T2B) and Preferred Agility Champion (PACH) introduced."),
             ("2015", "Premier classes added."),
         ],
-        "blurb": "AKC changed the Agility ranking-report format several times, so some historical years are partial or were never published in a usable form (see coverage below).",
+        "blurb": "AKC changed the Agility ranking-report format several times, so some historical years are partial or were never published in a usable form (see coverage below). <b>Excellent B and Preferred Excellent B are speed awards</b> — the club ranks them on average yards-per-second over a dog's fastest ten double-qualifying runs, and its published card prints only that column. A qualifying run at that level must be clean, so every such run scores 100: where we can verify it against the AKC electronic report the Avg Score column shows 100.00, and it is blank for the years those raw files do not cover. <b>The score is never what decides the order in those two classes.</b>",
         "owners_missing": ["2013", "2015", "2019"],
     },
     "rally": {
