@@ -32,9 +32,8 @@ the rankings calculator; ⚠️ marks the few points still awaiting club confirm
 
    Same score means same rank, listed by name in alphabetical order. (Titles that follow
    the name — CD, RM, RAE, CGC — never affect the order. Ties are judged on the score as
-   printed, to two decimals. In agility's Preferred award, where dogs are counted on
-   qualifying runs and separated by speed, they share a rank only when both match, and
-   then the alphabet decides.)
+   printed, to two decimals. Agility is the exception (Linda, 21 Oct 2026): it ranks on
+   the unrounded values, so a tie there means truly equal values; see Agility below.)
 
 ---
 
@@ -93,7 +92,10 @@ three-and-three agility checks at 239.)*
   Lawman's CD is dated January 18, 2026, but one leg came from 2025 → excluded. Betsy
   spots old titles from AKC's previous-titles reports or her worksheet notes; the
   **monthly AKC title file** (raw_akc/New Titles 2026.xlsx, master kept by Polly) is
-  the machine-readable source. B classes are unaffected (a dog may keep entering;
+  the machine-readable source. Title legs from the A and B class both count (Miranda
+  Rights 2026: BN A 1/30 + BN B 2/20, 2/21 → BN dated 2/21). Encoded since 2026 Q3:
+  `check_title_eligibility.py`, applied by `build_quarter.py` (Shogun's How Can I Resist
+  You, BN dated 6/26/2026 on only two 2026 legs → not listed). B classes are unaffected (a dog may keep entering;
   best three of all legs, e.g. Polesitter's Open B 199.17 from 17).
 - **Quarterly vs annual (Betsy, 9/16):** the quarterly rankings are cumulative and can
   in rare cases differ from the year-end award computation; the quarterlies exist to
@@ -133,13 +135,25 @@ three-and-three agility checks at 239.)*
 - **Preferred Springer of the Year:** the quarterly sheet ranks by the same
   fastest-ten-double-Q speed in the Preferred classes; the **annual** award instead
   totals all Preferred qualifying runs (ties broken by speed). Both are computed.
-- **Novice and Open awards:** the average of the **first six** qualifying runs — the
-  three Standard and three Jumpers legs that earn the title. Ties break on speed.
-- **Excellent A award:** the average of the qualifying scores, with an eligibility
-  requirement of **at least three Standard and three Jumpers** scores (a dog with three
-  Standard 100s but only two Jumpers legs is not yet eligible).
-- **Preferred class awards** (Novice/Excellent A): the average across both preferred
-  classes' legs together.
+- **Novice, Open and Excellent A awards (and their Preferred classes) (Linda, 21 Oct
+  2026):** the average of the **six title legs**: the three Standard and three Jumpers
+  legs that earned the dog's two titles. **All legs must be earned in the current year**:
+  a dog is listed only when both titles are dated this year and every leg up to each
+  title date was run this year. A dog with one leg last year and three this year finished
+  the title on its second leg this year, so it is not listed. Only Excellent B and
+  Preferred Excellent B are exempt. Checked against the AKC title master
+  (`raw_akc/New Titles <year>.xlsx`), as for obedience; a dog with six legs but a title
+  not yet on the file is kept and flagged ("AKC lag"). Ties in score break on speed.
+- **Speed (yards per second) (Linda, 21 Oct 2026):** course distance ÷ dog's time. On
+  **Novice and Open Standard** courses (AGNOVA, AGNOVB, AGNOVP, AGOPEN, AGOPENP) the
+  course has a table, so the 5-second table count comes off the time first: distance ÷
+  (time − 5). Excellent Standard no longer has a table, and Jumpers never does.
+  Reproduces Linda's 2026 Open sheet run for run (12/12).
+- **Precision (Linda, 21 Oct 2026):** agility ranks on the **unrounded** values, and
+  every agility speed prints **three decimals** (Albert, 21 Oct: "all around").
+  Two dogs can print the same figure and hold different places (Q3 2026: Mcd's Psych You
+  Out 3.8417 over Cedarwood's Dream A Little Dream 3.8371, both 3.84 at two decimals).
+  This overrides ground rule 4's two-decimal tie for agility.
 
 ## Conformation (Breed & Group)
 
@@ -156,9 +170,19 @@ exactly and match the wording on the club's awards page.*
   for that day fold into the BIS points (no double counting).
 - Owner-handled series and puppy-competition results are separate programs and are
   not counted.
-- **"Spec" columns:** a specialty is a springer club's own show or the National —
-  ⚠️ plus club-designated **supported entries** at all-breed shows, which appear only
-  in the club calendar. The supported-entry list is the one input the AKC file lacks.
+- **"Spec" columns:** a specialty is a springer club's own show or the National
+  (AKC competition type S/PS), **plus designated specialties (DS)**: a breed club's
+  specialty held at an all-breed show. The AKC results file lists a DS as an ordinary
+  all-breed show (AB/LB), so the event numbers come from the AKC event search
+  (Conformation Events → Specialties (S/PS/DS) → English Springer Spaniel → type DS →
+  the host show under Associated Events). Alvin Eng compiled that list by hand/scraper;
+  since 20 Oct 2026 `fetch_designated_specialties.py` does the same from the AKC event
+  search API (search by EVENT date, not the default closing date) and `build_quarter.py`
+  runs it whenever `raw_akc/designated_specialties_<year>.csv` does not yet reach the
+  quarter's end. It reproduced Alvin's Jan–Sep 2026 list exactly (10 events). With it, every #Spec cell
+  matches: Q1 and Jan–Jun 2026 published cards (0 diffs, previously 7 and 10 thought to
+  be "supported entries") and Alvin's Jan–Sep 2026 tabulation (474/474 cells,
+  20 Oct 2026).
 
 ## Juniors *(draft — no current published ranking; methodology validated against Canine Chronicle, the source the club's 2016 quarterly reprinted)*
 
@@ -211,7 +235,7 @@ alpha-tie ordering with shared ranks) is computed and with Polly to issue.
 | group/BIS points | `Dogs Defeated` on `BISPRT`/`GRP1–4` and `(BIS, BIS)` rows |
 | excluded series | `BOBOH`, `BISOH`, `BISPRTOH`/`OHG*`, `BP*` (owner-handled, puppy) |
 | juniors show total | `Num Competing` on BJH/RBJH rows (class rows carry class size) |
-| speed | YPS = `Course Distance` / `Dog Time` |
+| speed | YPS = `Course Distance` / `Dog Time`; Novice/Open Standard: / (`Dog Time` − 5) |
 
 *Code: `build_calculator.py` (sports), `compute_conformation.py`, `juniors_standings.py`;
 regression suite `test_calculator.py` pins every validated number above.*

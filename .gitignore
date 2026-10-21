@@ -35,3 +35,5 @@ spotlight-siblings/
 *.bak-*
 # extraction staging output (derived from copyrighted magazine PDFs) — private only, not for public repo
 spotlight/staging/
+# built quarter outputs (report data carries AKC registration numbers; Q3 drafts before release) — private backup only
+quarters/

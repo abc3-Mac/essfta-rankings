@@ -14,10 +14,11 @@ Rules validated cell-by-cell against the published 2026 Q1 and Jan–Jun reports
                  group points fold into the BIS points (subtracted from GRPn,
                  the placement still counted)
   BIS Pts      = Dogs Defeated on (BIS,BIS) rows
-  #Spec        = Competition Type S or PS. KNOWN LIMIT: the club also counts
-                 club-designated supported entries at all-breed shows, which are
-                 not derivable from the AKC export — those cells can undercount
-                 until the club's supported-entry list is available.
+  #Spec        = Competition Type S or PS, plus designated specialties (DS):
+                 a breed club's specialty held at an all-breed show, which the
+                 export lists as AB/LB. Their event numbers come from
+                 raw_akc/designated_specialties_<year>.csv (Alvin Eng, 20 Oct 2026),
+                 which reproduced the club's Jan–Sep 2026 #Spec cells.
   Sex M/F splits the Dogs/Bitches sections; OH (BOBOH) and Bred-By/Puppy series
   are excluded (their result codes never match the ones tallied here).
 
@@ -55,6 +56,18 @@ def _cell(v):
     return str(v).strip()
 
 
+def _date(text):
+    """'1/22/2026' or '2026-01-22 00:00:00' -> a sortable date (date.min when unreadable)."""
+    import datetime
+    s = str(text).strip()
+    for fmt, cut in (("%m/%d/%Y", None), ("%Y-%m-%d", 10)):
+        try:
+            return datetime.datetime.strptime(s[:cut] if cut else s, fmt).date()
+        except ValueError:
+            pass
+    return datetime.date.min
+
+
 def read_raw(path):
     """One raw AKC conformation export (.xls or .xlsx) -> list of row dicts.
 
@@ -88,8 +101,13 @@ def read_raw(path):
     return rows
 
 
-def aggregate(rows, spec_types=("S", "PS")):
-    """Raw result rows -> per-dog tallies (the validated rules above)."""
+def aggregate(rows, spec_types=("S", "PS"), ds_events=()):
+    """Raw result rows -> per-dog tallies (the validated rules above).
+
+    ds_events: AKC event numbers of the all-breed shows that hosted a designated
+    specialty (competition type DS on the AKC event search). The results export
+    lists those shows as AB/LB, so they count as specialties only through this list
+    (see load_designated_specialties)."""
     win_ncls, bw_sex, bis_events = {}, {}, set()
     for r in rows:
         ev = r["Event Number"]
@@ -105,20 +123,24 @@ def aggregate(rows, spec_types=("S", "PS")):
         if not reg:
             continue
         d = dogs.setdefault(reg, {
-            "name": "", "owner": "", "sex": r["Sex"],
+            "name": "", "owner": "", "sex": r["Sex"], "seen": None,
             "bob_n": 0, "bob_spec": 0, "bob_pts": 0,
             "bos_n": 0, "bos_spec": 0, "bos_pts": 0,
             "bis_n": 0, "bis_pts": 0,
             "grp": {i: [0, 0] for i in (1, 2, 3, 4)},   # n, pts
         })
-        # keep the longest name/owner seen (titles accrue over the year)
-        if len(r["Dog Name"]) >= len(d["name"]):
+        # the dog's name and owners as of its most recent show (as the club's tabulation
+        # prints them): owners change during a year, and AKC consolidates titles (SCN SEN
+        # SBN -> SWN), so the longest string is not the current one
+        when = _date(r.get("Date Event Start", ""))
+        if d["seen"] is None or when >= d["seen"]:
+            d["seen"] = when
             d["name"] = r["Dog Name"]
-        if r["Owner(s)"] and len(r["Owner(s)"]) >= len(d["owner"]):
-            d["owner"] = r["Owner(s)"]
+            if r["Owner(s)"]:
+                d["owner"] = r["Owner(s)"]
         cls, res = r["Comp Primary Class"], r["Result Code"]
         dd = num(r["Dogs Defeated"])
-        spec = r["Competition Type"] in spec_types
+        spec = r["Competition Type"] in spec_types or r["Event Number"] in ds_events
         if cls == "BOB" and res == "BOB":
             d["bob_n"] += 1
             d["bob_pts"] += dd
@@ -189,7 +211,7 @@ def group_rows(dogs, sex):
     return _rank(out)
 
 
-def compute_canonical(rows, year, quarter, spec_types=("S", "PS"), top_n=15):
+def compute_canonical(rows, year, quarter, spec_types=("S", "PS"), top_n=15, ds_events=()):
     """Concatenated raw rows -> canonical conformation rows (breed_group.json
     schema: str stats, ALL-CAPS names/owners like the PDF parser emits;
     dataprep.py Title-Cases at build time).
@@ -197,7 +219,7 @@ def compute_canonical(rows, year, quarter, spec_types=("S", "PS"), top_n=15):
     top_n: the published reports list the top 15 per section, ties at the
     cutoff included (historically up to 16 rows) — matched here by keeping
     every row with rank <= top_n. Pass None for the full standings."""
-    dogs = aggregate(rows, spec_types=spec_types)
+    dogs = aggregate(rows, spec_types=spec_types, ds_events=ds_events)
     out = []
     for sec, rws, cols in (("Breed - Dogs", breed_rows(dogs, "M"), BREED_COLS),
                            ("Breed - Bitches", breed_rows(dogs, "F"), BREED_COLS),
@@ -211,6 +233,21 @@ def compute_canonical(rows, year, quarter, spec_types=("S", "PS"), top_n=15):
                         "name": r["name"].upper(), "owner": r["owner"].upper(),
                         **{k: str(r[k]) for k in cols}})
     return out
+
+
+def load_designated_specialties(year):
+    """Event numbers of the year's designated specialties, from
+    raw_akc/designated_specialties_<year>.csv (Alvin Eng's list, scraped from the AKC
+    event search: Conformation Events, Specialties (S/PS/DS), English Springer Spaniel,
+    competition type DS -> the host all-breed show under Associated Events).
+    Columns: date_event_end, text_event_number, cde_competition_type, orig_name_event,
+    text_name_event; lines starting with # are comments. Missing file -> empty set."""
+    import csv
+    path = os.path.join(HERE, "raw_akc", f"designated_specialties_{year}.csv")
+    if not os.path.exists(path):
+        return set()
+    with open(path, newline="", encoding="utf-8-sig") as f:
+        return {row[1].strip() for row in csv.reader(f) if row and not row[0].startswith("#")}
 
 
 # ------------------------------------------------------------------ validation
@@ -258,7 +295,7 @@ def validate(published, computed, label):
                         ndiff += 1
                         print(f"  DIFF  {label} {sec} {p['name'][:40]} {k}: pub {p[k]} vs calc {c[k]}")
     print(f"{label}: {len([r for r in published])} published rows -> "
-          f"{ndiff} cell diffs, {nspec} spec-count diffs (expected; supported entries), {nmiss} unmatched")
+          f"{ndiff} cell diffs, {nspec} spec-count diffs, {nmiss} unmatched")
     return ndiff + nmiss
 
 
@@ -296,14 +333,14 @@ if __name__ == "__main__":
     # Q1: computed from the 1Q window alone vs the repo's published Q1 rows
     q1_pub = [r for r in json.load(open(os.path.join(HERE, "breed_group.json"), encoding="utf-8"))
               if r["year"] == "2026" and r["quarter"] == "Q1"]
-    q1_calc = compute_canonical(raw1, "2026", "Q1")
+    q1_calc = compute_canonical(raw1, "2026", "Q1", ds_events=load_designated_specialties("2026"))
     fails += _invariants(q1_calc, "Q1 computed")
     fails += validate(q1_pub, q1_calc, "Q1 vs breed_group.json")
 
     # Jan–Jun: computed from 1Q+2Q concatenated vs an in-memory parse of the published PDF
     from parse import parse_pdf
     q2_pub = parse_pdf(os.path.join(HERE, "pdfs", "2026-Conformation-Q2.pdf"))
-    q2_calc = compute_canonical(raw1 + raw2, "2026", "Q2")
+    q2_calc = compute_canonical(raw1 + raw2, "2026", "Q2", ds_events=load_designated_specialties("2026"))
     fails += _invariants(q2_calc, "JanJun computed")
     fails += validate(q2_pub, q2_calc, "JanJun vs 2026-Conformation-Q2.pdf")
 
